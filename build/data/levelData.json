@@ -3,13 +3,33 @@
         {
             "switches":[
                 {
-                    "connectsTo":"door0",
+                    "connectedDoors": [0],
                     "position": 0
                 }
             ],
             "doors":[
                 {
-                    "position": "open"
+                    "position": "closed"
+                }
+            ]
+        },
+        {
+            "switches":[
+                {
+                    "connectedDoors": [0, 2],
+                    "position": 0
+                },
+                {
+                    "connectedDoors": [1, 2],
+                    "position": 1
+                }
+            ],
+            "doors":[
+                {
+                    "position": "closed"
+                },
+                {
+                    "position": "closed"
                 },
                 {
                     "position": "closed"
