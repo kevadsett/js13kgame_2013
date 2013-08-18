@@ -59,11 +59,11 @@
         {
             "switches":[
                 {
-                    "connectedDoors": [0, 2],
+                    "connectedDoors": [2, 1],
                     "position": 0
                 },
                 {
-                    "connectedDoors": [0, 1],
+                    "connectedDoors": [1],
                     "position": 1
                 }
             ],

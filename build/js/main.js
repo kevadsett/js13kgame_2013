@@ -25,16 +25,20 @@ var GameModel = function() {
         this.view.loop();
     }, this));
     
+    this.activateSwitch = function(switchID) {
+        if(this.currentLevel.switches[switchID]) {
+            var connectedDoors = this.currentLevel.switches[switchID].connectedDoors;
+            for(var i = 0; i < connectedDoors.length; i++) {
+                var currentDoor = this.currentLevel.doors[connectedDoors[i]];
+                currentDoor.position = currentDoor.position == "open" ? "closed" : "open";
+            };
+        };
+    };
+    
     this.onKeyPressed = function(characterString) {
         var numberPressed = parseInt(characterString) || -1;
         if(numberPressed != -1) {
-            if(this.currentLevel.switches[numberPressed - 1]) {
-                var connectedDoors = this.currentLevel.switches[numberPressed - 1].connectedDoors;
-                for(var i = 0; i < connectedDoors.length; i++) {
-                    var currentDoor = this.currentLevel.doors[connectedDoors[i]];
-                    currentDoor.position = currentDoor.position == "open" ? "closed" : "open";
-                };
-            };
+            this.activateSwitch(numberPressed -1);
         } else {
             if(characterString == "u") {
                 if(this.currentLevelIndex + 1 < this.levels.length) {
@@ -71,6 +75,14 @@ var GameView = function(gameModel) {
         $(document).on('keypress', $.proxy(function(event){
             var charCode = event.which || event.keyCode;
             this.model.onKeyPressed(String.fromCharCode(charCode));
+        }, this));
+        
+        $('.gameCanvas').on('click', $.proxy(function(event) {
+            var offsetX = $('.gameCanvas').offset().left;
+            var clickedIndex = this.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
+            if (clickedIndex > -1) {
+                this.model.activateSwitch(clickedIndex);
+            };
         }, this));
         
         this.pixelSize = 5;
@@ -117,7 +129,18 @@ var LevelView = function(model) {
         for (var i = 0; i < this.model.switches.length; i++) {
             this.switchPositions.push(this.doorPositions[this.model.switches[i].position] - 50);
         }
-    }
+    };
+    
+    this.getClickedSwitch = function(x, y) {
+        for(var i = 0; i < this.switchPositions.length; i++) {
+            currentX = this.switchPositions[i];
+            console.log(currentX);
+            if (currentX < (x + touchRadius) && currentX > (x - touchRadius)) {
+                return i;
+            };
+        };
+        return -1;
+    };
     
     this.render = function() {
         var ctx = game.view.context;
@@ -168,6 +191,7 @@ var PlayerView = function() {
 
 $(document).ready(function() {
     window.game = new GameModel();
+    window.touchRadius = 35;
 });
 
 function mapValue(value, low1, high1, low2, high2) {
