@@ -1,0 +1,20 @@
+{
+    "levels":[
+        {
+            "switches":[
+                {
+                    "connectsTo":"door0",
+                    "position": 0
+                }
+            ],
+            "doors":[
+                {
+                    "position": "open"
+                },
+                {
+                    "position": "closed"
+                }
+            ]
+        }
+    ]
+}
