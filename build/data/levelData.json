@@ -16,17 +16,60 @@
         {
             "switches":[
                 {
-                    "connectedDoors": [0, 2],
+                    "connectedDoors": [0, 1],
                     "position": 0
                 },
                 {
-                    "connectedDoors": [1, 2],
+                    "connectedDoors": [0, 1],
                     "position": 1
                 }
             ],
             "doors":[
                 {
                     "position": "closed"
+                },
+                {
+                    "position": "open"
+                }
+            ]
+        },
+        {
+            "switches":[
+                {
+                    "connectedDoors": [0, 1, 2],
+                    "position": 0
+                },
+                {
+                    "connectedDoors": [1],
+                    "position": 1
+                }
+            ],
+            "doors":[
+                {
+                    "position": "closed"
+                },
+                {
+                    "position": "open"
+                },
+                {
+                    "position": "closed"
+                }
+            ]
+        },
+        {
+            "switches":[
+                {
+                    "connectedDoors": [0, 2],
+                    "position": 0
+                },
+                {
+                    "connectedDoors": [0, 1],
+                    "position": 1
+                }
+            ],
+            "doors":[
+                {
+                    "position": "open"
                 },
                 {
                     "position": "closed"

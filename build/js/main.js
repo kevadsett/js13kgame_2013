@@ -9,19 +9,24 @@
 })();
 
 var GameModel = function() {
-    var instance = GameModel.prototype;
     console.log("New game initialised");
     
-    $.getJSON("data/levelData.json", function(data){
-        instance.levelData = data.levels;
-        instance.currentLevel = new LevelModel(instance.levelData[0]);
-        instance.view = new GameView(instance);
-        instance.view.level.initialise();
-        instance.view.loop();
-    });
+    $.getJSON("data/levelData.json", $.proxy(function(data){
+        this.levelData = data.levels;
+        this.levels = [];
+        for(var i = 0; i < this.levelData.length; i++) {
+            var newLevelModel = new LevelModel(this.levelData[i]);
+            this.levels.push(newLevelModel);
+        };
+        this.currentLevelIndex = 0;
+        this.currentLevel = this.levels[this.currentLevelIndex];
+        this.view = new GameView(this);
+        this.view.level.initialise();
+        this.view.loop();
+    }, this));
     
-    instance.onKeyPressed = function(chararcterString) {
-        var numberPressed = parseInt(chararcterString) || -1;
+    this.onKeyPressed = function(characterString) {
+        var numberPressed = parseInt(characterString) || -1;
         if(numberPressed != -1) {
             if(this.currentLevel.switches[numberPressed - 1]) {
                 var connectedDoors = this.currentLevel.switches[numberPressed - 1].connectedDoors;
@@ -30,61 +35,80 @@ var GameModel = function() {
                     currentDoor.position = currentDoor.position == "open" ? "closed" : "open";
                 };
             };
+        } else {
+            if(characterString == "u") {
+                if(this.currentLevelIndex + 1 < this.levels.length) {
+                    this.currentLevelIndex++;
+                    this.currentLevel = this.levels[this.currentLevelIndex];
+                    this.view.setupLevelView();
+                    this.view.level.initialise();
+                }
+            }
+            if(characterString == "d") {
+                if(this.currentLevelIndex - 1 >= 0) {
+                    this.currentLevelIndex--;
+                    this.currentLevel = this.levels[this.currentLevelIndex];
+                    this.view.setupLevelView();
+                    this.view.level.initialise();
+                }
+            }
         };
     };
     
 };
 
 var GameView = function(gameModel) {
-    var instance = GameView.prototype;
     
-    instance.model = gameModel;
+    this.model = gameModel;
     
-    instance.initialise = function() {
+    this.initialise = function() {
         console.log("Initialising game view");
         
         var canvas = $('.gameCanvas')[0];
-        instance.height = canvas.height;
-        instance.width = canvas.width;
-        instance.context = canvas.getContext('2d');
+        this.height = canvas.height;
+        this.width = canvas.width;
+        this.context = canvas.getContext('2d');
         $(document).on('keypress', $.proxy(function(event){
             var charCode = event.which || event.keyCode;
             this.model.onKeyPressed(String.fromCharCode(charCode));
         }, this));
         
-        instance.pixelSize = 5;
-        this.level = new LevelView(this.model.currentLevel);
+        this.pixelSize = 5;
+        this.setupLevelView();
     }
     
-    instance.loop = function() { 
+    this.loop = function() { 
         window.requestAnimFrame($.proxy(this.loop, this));
         this.render();
     }
     
-    instance.render = function() {
+    this.render = function() {
+        $('.levelNumber').html(this.model.currentLevelIndex + 1);
         this.context.clearRect(0, 0, this.width, this.height);
         this.level.render();
         //this.player.render();
     }
     
-    instance.initialise();
+    this.setupLevelView = function() {
+        this.level = new LevelView(this.model.currentLevel);
+    }
+    
+    this.initialise();
 };
 
 var LevelModel = function(levelData) {
-    var instance = LevelModel.prototype;
-    instance.initialise = function(levelData) {
+    this.initialise = function(levelData) {
         this.switches = levelData.switches;
         this.doors = levelData.doors;
     }
     
-    instance.initialise(levelData);
+    this.initialise(levelData);
 };
 
 var LevelView = function(model) {
-    var instance = LevelView.prototype;
-    instance.model = model;
+    this.model = model;
     
-    instance.initialise = function() {
+    this.initialise = function() {
         this.doorPositions = [];
         this.switchPositions = [];
         for (var i = 0; i < this.model.doors.length; i++) {
@@ -95,7 +119,7 @@ var LevelView = function(model) {
         }
     }
     
-    instance.render = function() {
+    this.render = function() {
         var ctx = game.view.context;
         ctx.fillStyle = "#111111";
         
