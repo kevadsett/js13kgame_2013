@@ -58,12 +58,12 @@ var GameModel = function() {
     };
     
     this.startNextLevel = function() {
-        if(this.currentLevelIndex + 1 < this.levels.length) {
-            this.currentLevelIndex++;
-            this.currentLevel = this.levels[this.currentLevelIndex];
-            this.player.reset();
-            this.view.setupLevelView();
-            this.view.level.initialise();
+        if(self.currentLevelIndex + 1 < self.levels.length) {
+            self.currentLevelIndex++;
+            self.currentLevel = self.levels[self.currentLevelIndex];
+            self.player.reset();
+            self.view.setupLevelView();
+            self.view.level.initialise();
         }
     }
     
@@ -93,19 +93,21 @@ var GameView = function(gameModel) {
             var clickedIndex = self.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
             if (clickedIndex > -1) {
                 var i = self.player.model.positionIndex;
-                while (i != clickedIndex) {
+                while (i != clickedIndex && i < self.level.model.doors.length) {
                     if(i > clickedIndex) i--;
-                    console.log("i: " + i + ", clickedIndex: " + clickedIndex);
-                    console.log(self.level.model.doors[i].position);
                     if(self.level.model.doors[i].position == "closed") return;
                     if(i < clickedIndex) i++;
-                }
-                
-                self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - 25, self.model.activateSwitch, clickedIndex);
+                };
+                if(clickedIndex < 99) {
+                    self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - 25, self.model.activateSwitch, clickedIndex);
+                } else {
+                    console.log("You clicked on the stairs!");
+                    self.player.model.moveToPosition(720, self.player.model.moveUpstairs, self.model.startNextLevel);
+                };
             };
         };
         
-        this.pixelSize = 5;
+        this.pixelSize = 4;
         this.player = new PlayerView(this.model.player);
         this.setupLevelView();
         
@@ -161,11 +163,19 @@ var LevelView = function(model) {
                 return i;
             };
         };
+        if (x > 670) return 99;
         return -1;
     };
     
     this.render = function() {
         var ctx = game.view.context;
+        
+        for (var i = 0; i < 5; i++) {
+            var num = Math.ceil(mapValue(i, 0, 4, 17, 255)).toString(16);
+            ctx.fillStyle = "#" + num + num + num;
+            ctx.fillRect(670, game.view.height - ((i+1) * 40), 100, 40);
+        };
+        
         ctx.fillStyle = "#111111";
         
         for (var i = 0; i < this.model.doors.length; i++) {
@@ -198,6 +208,7 @@ var LevelView = function(model) {
 
 var PlayerModel = function() {
     this.x = this.targetX = 50;
+    this.y = 200;
     this.width = 50;
     this.height = 160;
     this.moveSpeed = 10;
@@ -206,17 +217,23 @@ var PlayerModel = function() {
     
     new PlayerView(this);
 
-    this.moveToPosition = function(newPosition, callback, switchIndex) {
+    this.moveToPosition = function(newPosition, callback, callbackArgs) {
         if(this.x < newPosition) this.moveDirection = "right";
         if(this.x > newPosition) this.moveDirection = "left";
         this.targetX = newPosition;
         this.destinationReachedCallback = callback;
-        this.destinationReachedCallbackArgs = switchIndex;
-        this.positionIndex = switchIndex;
+        this.destinationReachedCallbackArgs = callbackArgs;
+        this.positionIndex = callbackArgs;
+    }
+    
+    this.moveUpstairs = function(callback) {
+        this.destinationReachedCallback = callback;
+        this.moveDirection = "up";
     }
     
     this.reset = function() {
         this.x = 50;
+        this.y = 200;
         this.positionIndex = 0;
         this.moveDirection = "none";
     }
@@ -239,12 +256,18 @@ var PlayerView = function(model) {
                 this.model.moveDirection = "none";
                 this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
             }
+        } else if (this.model.moveDirection == "up") {
+            if (this.model.y > 0) {
+                this.model.y -= this.model.moveSpeed;
+            } else {
+                this.model.destinationReachedCallback();
+            }
         } else {
             // no movement
         }
         var ctx = game.view.context;
         ctx.fillStyle = "#444444";
-        ctx.fillRect(this.model.x - this.model.width/2, game.view.height - this.model.height, this.model.width, this.model.height);
+        ctx.fillRect(this.model.x - this.model.width/2, this.model.y - this.model.height, this.model.width, this.model.height);
     }
 };
 
