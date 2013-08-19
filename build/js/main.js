@@ -11,7 +11,7 @@
 function startGame(){
     window.game = new GameModel();
     game.initialiseViews();
-    window.touchRadius = 35;
+    window.touchRadius = 42;
 };
 
 var GameModel = function() {
@@ -26,6 +26,10 @@ var GameModel = function() {
     this.currentLevelIndex = 0;
     this.currentLevel = this.levels[this.currentLevelIndex];
     
+    this.player = new PlayerModel();
+    
+    var self = this;
+    
     this.initialiseViews = function() {
         this.view = new GameView(this);
         this.view.level.initialise();
@@ -33,10 +37,10 @@ var GameModel = function() {
     };
     
     this.activateSwitch = function(switchID) {
-        if(this.currentLevel.switches[switchID]) {
-            var connectedDoors = this.currentLevel.switches[switchID].connectedDoors;
+        if(self.currentLevel.switches[switchID]) {
+            var connectedDoors = self.currentLevel.switches[switchID].connectedDoors;
             for(var i = 0; i < connectedDoors.length; i++) {
-                var currentDoor = this.currentLevel.doors[connectedDoors[i]];
+                var currentDoor = self.currentLevel.doors[connectedDoors[i]];
                 currentDoor.position = currentDoor.position == "open" ? "closed" : "open";
             };
         };
@@ -48,24 +52,23 @@ var GameModel = function() {
             this.activateSwitch(numberPressed -1);
         } else {
             if(characterString == "u") {
-                if(this.currentLevelIndex + 1 < this.levels.length) {
-                    this.currentLevelIndex++;
-                    this.currentLevel = this.levels[this.currentLevelIndex];
-                    this.view.setupLevelView();
-                    this.view.level.initialise();
-                }
-            }
-            if(characterString == "d") {
-                if(this.currentLevelIndex - 1 >= 0) {
-                    this.currentLevelIndex--;
-                    this.currentLevel = this.levels[this.currentLevelIndex];
-                    this.view.setupLevelView();
-                    this.view.level.initialise();
-                }
+                this.startNextLevel()
             }
         };
     };
     
+    this.startNextLevel = function() {
+        if(this.currentLevelIndex + 1 < this.levels.length) {
+            this.currentLevelIndex++;
+            this.currentLevel = this.levels[this.currentLevelIndex];
+            this.player.reset();
+            this.view.setupLevelView();
+            this.view.level.initialise();
+        }
+    }
+    
+    this.checkLevelComplete = function() {
+    }
 };
 
 var GameView = function(gameModel) {
@@ -89,12 +92,23 @@ var GameView = function(gameModel) {
             var offsetX = canvas.offsetLeft;
             var clickedIndex = self.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
             if (clickedIndex > -1) {
-                self.model.activateSwitch(clickedIndex);
+                var i = self.player.model.positionIndex;
+                while (i != clickedIndex) {
+                    if(i > clickedIndex) i--;
+                    console.log("i: " + i + ", clickedIndex: " + clickedIndex);
+                    console.log(self.level.model.doors[i].position);
+                    if(self.level.model.doors[i].position == "closed") return;
+                    if(i < clickedIndex) i++;
+                }
+                
+                self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - 25, self.model.activateSwitch, clickedIndex);
             };
         };
         
         this.pixelSize = 5;
+        this.player = new PlayerView(this.model.player);
         this.setupLevelView();
+        
     };
     
     this.loop = (function() { 
@@ -107,7 +121,7 @@ var GameView = function(gameModel) {
         levelNumberDiv.innerHTML = (this.model.currentLevelIndex + 1);
         this.context.clearRect(0, 0, this.width, this.height);
         this.level.render();
-        //this.player.render();
+        this.player.render();
     };
     
     this.setupLevelView = function() {
@@ -143,7 +157,6 @@ var LevelView = function(model) {
     this.getClickedSwitch = function(x, y) {
         for(var i = 0; i < this.switchPositions.length; i++) {
             currentX = this.switchPositions[i];
-            console.log(currentX);
             if (currentX < (x + touchRadius) && currentX > (x - touchRadius)) {
                 return i;
             };
@@ -167,35 +180,72 @@ var LevelView = function(model) {
         for (var i = 0; i < this.model.switches.length; i++) {
             var currentSwitch = this.model.switches[i];
             ctx.fillRect(
-                this.switchPositions[i] - game.view.pixelSize, 
-                game.view.height/2 - (game.view.pixelSize * 2), 
-                game.view.pixelSize * 2, 
-                game.view.pixelSize
-            );
-            ctx.fillRect(
                 this.switchPositions[i] - (game.view.pixelSize * 2), 
                 game.view.height/2 - game.view.pixelSize, 
                 game.view.pixelSize * 4, 
-                game.view.pixelSize
-            );
-            ctx.fillRect(
-                this.switchPositions[i] - (game.view.pixelSize * 2), 
-                game.view.height/2, 
-                game.view.pixelSize * 4, 
-                game.view.pixelSize
+                game.view.pixelSize * 2
             );
             ctx.fillRect(
                 this.switchPositions[i] - game.view.pixelSize, 
-                game.view.height/2 + game.view.pixelSize, 
+                game.view.height/2- (game.view.pixelSize * 2), 
                 game.view.pixelSize * 2, 
-                game.view.pixelSize
+                game.view.pixelSize * 4
             );
         };
     };
     
 };
 
-var PlayerView = function() {
+var PlayerModel = function() {
+    this.x = this.targetX = 50;
+    this.width = 50;
+    this.height = 160;
+    this.moveSpeed = 10;
+    this.moveDirection = "none";
+    this.positionIndex = 0;
+    
+    new PlayerView(this);
+
+    this.moveToPosition = function(newPosition, callback, switchIndex) {
+        if(this.x < newPosition) this.moveDirection = "right";
+        if(this.x > newPosition) this.moveDirection = "left";
+        this.targetX = newPosition;
+        this.destinationReachedCallback = callback;
+        this.destinationReachedCallbackArgs = switchIndex;
+        this.positionIndex = switchIndex;
+    }
+    
+    this.reset = function() {
+        this.x = 50;
+        this.positionIndex = 0;
+        this.moveDirection = "none";
+    }
+};
+
+var PlayerView = function(model) {
+    this.model = model;
+    this.render = function() {
+        if(this.model.moveDirection == "right") {
+            if(this.model.x < this.model.targetX) {
+                this.model.x += this.model.moveSpeed;
+            } else {
+                this.model.moveDirection = "none";
+                this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
+            }
+        } else if(this.model.moveDirection == "left") {
+            if(this.model.x > this.model.targetX) {
+                this.model.x -= this.model.moveSpeed;
+            } else {
+                this.model.moveDirection = "none";
+                this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
+            }
+        } else {
+            // no movement
+        }
+        var ctx = game.view.context;
+        ctx.fillStyle = "#444444";
+        ctx.fillRect(this.model.x - this.model.width/2, game.view.height - this.model.height, this.model.width, this.model.height);
+    }
 };
 
 function mapValue(value, low1, high1, low2, high2) {
@@ -265,7 +315,7 @@ var globalLevelData = {
         {
             switches:[
                 {
-                    connectedDoors: [2, 1],
+                    connectedDoors: [1, 2],
                     position: 0
                 },
                 {
