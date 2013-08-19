@@ -8,22 +8,29 @@
           };
 })();
 
+function startGame(){
+    window.game = new GameModel();
+    game.initialiseViews();
+    window.touchRadius = 35;
+};
+
 var GameModel = function() {
     console.log("New game initialised");
     
-    $.getJSON("data/levelData.json", $.proxy(function(data){
-        this.levelData = data.levels;
-        this.levels = [];
-        for(var i = 0; i < this.levelData.length; i++) {
-            var newLevelModel = new LevelModel(this.levelData[i]);
-            this.levels.push(newLevelModel);
-        };
-        this.currentLevelIndex = 0;
-        this.currentLevel = this.levels[this.currentLevelIndex];
+    this.levels = [];
+    for(var i = 0; i < globalLevelData.levels.length; i++) {
+        var newLevelModel = new LevelModel(globalLevelData.levels[i]);
+        this.levels.push(newLevelModel);
+    };
+
+    this.currentLevelIndex = 0;
+    this.currentLevel = this.levels[this.currentLevelIndex];
+    
+    this.initialiseViews = function() {
         this.view = new GameView(this);
         this.view.level.initialise();
         this.view.loop();
-    }, this));
+    };
     
     this.activateSwitch = function(switchID) {
         if(this.currentLevel.switches[switchID]) {
@@ -67,43 +74,45 @@ var GameView = function(gameModel) {
     
     this.initialise = function() {
         console.log("Initialising game view");
+        var self = this;
         
-        var canvas = $('.gameCanvas')[0];
+        var canvas = document.getElementById('gameCanvas');
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext('2d');
-        $(document).on('keypress', $.proxy(function(event){
+        document.onkeypress = function(event){
             var charCode = event.which || event.keyCode;
-            this.model.onKeyPressed(String.fromCharCode(charCode));
-        }, this));
+            self.model.onKeyPressed(String.fromCharCode(charCode));
+        };
         
-        $('.gameCanvas').on('click', $.proxy(function(event) {
-            var offsetX = $('.gameCanvas').offset().left;
-            var clickedIndex = this.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
+        canvas.onclick = function(event) {
+            var offsetX = canvas.offsetLeft;
+            var clickedIndex = self.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
             if (clickedIndex > -1) {
-                this.model.activateSwitch(clickedIndex);
+                self.model.activateSwitch(clickedIndex);
             };
-        }, this));
+        };
         
         this.pixelSize = 5;
         this.setupLevelView();
-    }
+    };
     
-    this.loop = function() { 
-        window.requestAnimFrame($.proxy(this.loop, this));
+    this.loop = (function() { 
+        window.requestAnimFrame(this.loop, this);
         this.render();
-    }
+    }).bind(this);
     
     this.render = function() {
-        $('.levelNumber').html(this.model.currentLevelIndex + 1);
+        var levelNumberDiv = document.getElementById('levelNumber');
+        levelNumberDiv.innerHTML = (this.model.currentLevelIndex + 1);
         this.context.clearRect(0, 0, this.width, this.height);
         this.level.render();
         //this.player.render();
-    }
+    };
     
     this.setupLevelView = function() {
         this.level = new LevelView(this.model.currentLevel);
-    }
+    };
     
     this.initialise();
 };
@@ -153,8 +162,8 @@ var LevelView = function(model) {
             } else {
                 ctx.fillRect(this.doorPositions[i], 0, game.view.pixelSize * 3, game.view.pixelSize * 3);
                 ctx.fillRect(this.doorPositions[i], game.view.height - game.view.pixelSize * 3, game.view.pixelSize * 3, game.view.pixelSize * 3);
-            }
-        }
+            };
+        };
         for (var i = 0; i < this.model.switches.length; i++) {
             var currentSwitch = this.model.switches[i];
             ctx.fillRect(
@@ -181,21 +190,100 @@ var LevelView = function(model) {
                 game.view.pixelSize * 2, 
                 game.view.pixelSize
             );
-        }
-    }
+        };
+    };
     
 };
 
 var PlayerView = function() {
 };
 
-$(document).ready(function() {
-    window.game = new GameModel();
-    window.touchRadius = 35;
-});
-
 function mapValue(value, low1, high1, low2, high2) {
     var range1 = high1 - low1;
     var range2 = high2 - low2;
     return ((value - low1) / range1 * range2 + low2);
-}
+};
+
+var globalLevelData = {
+    levels:[
+        {
+            switches:[
+                {
+                    connectedDoors: [0],
+                    position: 0
+                }
+            ],
+            doors:[
+                {
+                    position: "closed"
+                }
+            ]
+        },
+        {
+            switches:[
+                {
+                    connectedDoors: [0, 1],
+                    position: 0
+                },
+                {
+                    connectedDoors: [0, 1],
+                    position: 1
+                }
+            ],
+            doors:[
+                {
+                    position: "closed"
+                },
+                {
+                    position: "open"
+                }
+            ]
+        },
+        {
+            switches:[
+                {
+                    connectedDoors: [0, 1, 2],
+                    position: 0
+                },
+                {
+                    connectedDoors: [1],
+                    position: 1
+                }
+            ],
+            doors:[
+                {
+                    position: "closed"
+                },
+                {
+                    position: "open"
+                },
+                {
+                    position: "closed"
+                }
+            ]
+        },
+        {
+            switches:[
+                {
+                    connectedDoors: [2, 1],
+                    position: 0
+                },
+                {
+                    connectedDoors: [1],
+                    position: 1
+                }
+            ],
+            doors:[
+                {
+                    position: "open"
+                },
+                {
+                    position: "closed"
+                },
+                {
+                    position: "closed"
+                }
+            ]
+        }
+    ]
+};

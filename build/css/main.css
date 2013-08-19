@@ -10,7 +10,7 @@ body {
     position:relative;
 }
 
-.levelNumber { 
+#levelNumber { 
     display: block;
     font-size: 16em;
     color: #FFF;
@@ -19,7 +19,7 @@ body {
     margin-top: 1%;
 }
 
-.gameCanvas {
+#gameCanvas {
     margin-left: 50%;
     left: -385px;
     position: relative;
