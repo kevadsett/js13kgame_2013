@@ -13,12 +13,18 @@ var LevelView = function(model) {
     this.initialise = function() {
         this.doorPositions = [];
         this.switchPositions = [];
+        var switchesAt = new Array(this.model.doors.length);
+        for(var i = 0; i < this.model.doors.length; i++) {
+            switchesAt[i] = [];
+        };
         for (var i = 0; i < this.model.doors.length; i++) {
             this.doorPositions.push(mapValue(i+1, 0, this.model.doors.length+1, 0, game.view.width));
-        }
+        };
         for (var i = 0; i < this.model.switches.length; i++) {
-            this.switchPositions.push(this.doorPositions[this.model.switches[i].position] - 50);
-        }
+            switchesAt[this.model.switches[i].position].push(this.model.switches[i]);
+            var switchPos = (50 * switchesAt[this.model.switches[i].position].length);
+            this.switchPositions.push(this.doorPositions[this.model.switches[i].position] - switchPos);
+        };
     };
     
     this.getClickedSwitch = function(x, y) {
