@@ -209,11 +209,12 @@ var LevelView = function(model) {
 var PlayerModel = function() {
     this.x = this.targetX = 50;
     this.y = 200;
-    this.width = 50;
+    this.width = 160;
     this.height = 160;
     this.moveSpeed = 10;
     this.moveDirection = "none";
     this.positionIndex = 0;
+    this.filename = "images/player.png";
     
     new PlayerView(this);
 
@@ -241,6 +242,8 @@ var PlayerModel = function() {
 
 var PlayerView = function(model) {
     this.model = model;
+    this.imgObj = new Image();
+    this.imgObj.src = this.model.filename;
     this.render = function() {
         if(this.model.moveDirection == "right") {
             if(this.model.x < this.model.targetX) {
@@ -266,8 +269,10 @@ var PlayerView = function(model) {
             // no movement
         }
         var ctx = game.view.context;
-        ctx.fillStyle = "#444444";
-        ctx.fillRect(this.model.x - this.model.width/2, this.model.y - this.model.height, this.model.width, this.model.height);
+
+        ctx.drawImage(this.imgObj, this.model.x - this.model.width/2, this.model.y - this.model.height, this.model.width, this.model.height);
+        /*ctx.fillStyle = "#444444";
+        ctx.fillRect(this.model.x - this.model.width/2, this.model.y - this.model.height, this.model.width, this.model.height);*/
     }
 };
 
