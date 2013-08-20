@@ -33,23 +33,30 @@ var PlayerView = function(model) {
     this.model = model;
     this.imgObj = new Image();
     this.imgObj.src = globalAnimData.player.run.filename;
-    this.animIndex = 0;
+    this.animIndex = 3;
+    this.runFrames = globalAnimData.player.run.right.frames;
+    console.log(this.runFrames);
     this.render = function() {
-        var runFrames = globalAnimData.player.run.frames;
+        var ctx = game.view.context;
+        
         if(this.model.moveDirection == "right") {
             if(this.model.x < this.model.targetX) {
                 this.model.x += this.model.moveSpeed;
-                this.animIndex = (this.animIndex + 0.5) % (runFrames.length - 1);
+                this.runFrames = globalAnimData.player.run.right.frames;
+                this.animIndex = (this.animIndex + 0.5) % (this.runFrames.length - 1);
             } else {
                 this.model.moveDirection = "none";
+                this.animIndex = 3;
                 this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
             }
         } else if(this.model.moveDirection == "left") {
             if(this.model.x > this.model.targetX) {
                 this.model.x -= this.model.moveSpeed;
-                this.animIndex = (this.animIndex + 0.5) % (runFrames.length - 1);
+                this.runFrames = globalAnimData.player.run.left.frames;
+                this.animIndex = (this.animIndex + 0.5) % (this.runFrames.length - 1);
             } else {
                 this.model.moveDirection = "none";
+                this.animIndex = 3;
                 this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
             }
         } else if (this.model.moveDirection == "up") {
@@ -61,9 +68,8 @@ var PlayerView = function(model) {
         } else {
             // no movement
         }
-        var ctx = game.view.context;
+        var currentFrame = this.runFrames[Math.ceil(this.animIndex)];
         
-        var currentFrame = runFrames[Math.ceil(this.animIndex)];
         ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2, this.model.y - currentFrame.h, currentFrame.w, currentFrame.h);
     }
 };
