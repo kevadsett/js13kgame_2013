@@ -53,6 +53,11 @@ var GameModel = function() {
     
     this.checkLevelComplete = function() {
     }
+    
+    this.resize = function() {
+        console.log("Game resizing!");
+        this.view.resize();
+    }
 };
 
 var GameView = function(gameModel) {
@@ -73,8 +78,7 @@ var GameView = function(gameModel) {
         };
         
         canvas.onclick = function(event) {
-            var offsetX = canvas.offsetLeft;
-            var clickedIndex = self.level.getClickedSwitch(event.clientX - offsetX, event.clientY);
+            var clickedIndex = self.level.getClickedSwitch(event.clientX - self.levelX, event.clientY - self.levelY);
             if (clickedIndex > -1) {
                 var i = self.player.model.positionIndex;
                 while (i != clickedIndex && i < self.level.model.doors.length) {
@@ -103,15 +107,24 @@ var GameView = function(gameModel) {
     }).bind(this);
     
     this.render = function() {
-        var levelNumberDiv = document.getElementById('levelNumber');
-        levelNumberDiv.innerHTML = (this.model.currentLevelIndex + 1);
         this.context.clearRect(0, 0, this.width, this.height);
         this.level.render();
         this.player.render();
+        this.level.renderMask();
     };
     
     this.setupLevelView = function() {
         this.level = new LevelView(this.model.currentLevel);
+    };
+    
+    this.resize = function() {
+        console.log("Game view resizing");
+        var canvas = document.getElementById('gameCanvas');
+        this.height = canvas.height;
+        this.width = canvas.width;
+        this.levelX = this.width / 2 - this.level.width / 2;
+        this.levelY = this.height / 2 - this.level.height / 2;
+        console.log(this.levelX, this.levelY);
     };
     
     this.initialise();

@@ -70,6 +70,6 @@ var PlayerView = function(model) {
         }
         var currentFrame = this.runFrames[Math.ceil(this.animIndex)];
         
-        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2, this.model.y - currentFrame.h, currentFrame.w, currentFrame.h);
+        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, game.view.levelX + this.model.x - currentFrame.w/2, game.view.levelY + this.model.y - currentFrame.h, currentFrame.w, currentFrame.h);
     }
 };
