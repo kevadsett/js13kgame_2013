@@ -2,7 +2,6 @@ var PlayerModel = function() {
     var canvas = document.getElementById('gameCanvas');
     this.x = this.targetX = canvas.width / 14;
     this.y = canvas.height;
-    this.moveSpeed = 10;
     this.moveDirection = "none";
     this.positionIndex = 0;
     
@@ -28,9 +27,8 @@ var PlayerModel = function() {
         this.positionIndex = 0;
         this.moveDirection = "none";
     }
-};
-
-var PlayerView = function(model) {
+},
+PlayerView = function(model) {
     this.model = model;
     this.imgObj = new Image();
     this.imgObj.src = globalAnimData.player.run.filename;
@@ -38,7 +36,8 @@ var PlayerView = function(model) {
     this.runFrames = globalAnimData.player.run.right.frames;
     console.log(this.runFrames);
     this.render = function() {
-        var ctx = game.view.context;
+        var ctx = game.view.context,
+            currentFrame;
         
         if(this.model.moveDirection == "right") {
             if(this.model.x < this.model.targetX) {
@@ -69,10 +68,9 @@ var PlayerView = function(model) {
         } else {
             // no movement
         }
-        var currentFrame = this.runFrames[Math.ceil(this.animIndex)];
+        currentFrame = this.runFrames[Math.ceil(this.animIndex)];
         
-        var sizeMultiple = mapValue(game.view.pixelSize, 0, 4, 0, 1);
-        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2 * sizeMultiple, this.model.y - currentFrame.h * sizeMultiple, currentFrame.w * sizeMultiple, currentFrame.h * sizeMultiple);
+        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2 * game.view.sizeMultiple, this.model.y - currentFrame.h * game.view.sizeMultiple, currentFrame.w * game.view.sizeMultiple, currentFrame.h * game.view.sizeMultiple);
     };
     
     this.resize = function() {
@@ -80,6 +78,7 @@ var PlayerView = function(model) {
         console.log(game.view.prevWidth);
         this.model.x = mapValue(this.model.x, 0, game.view.prevWidth, 0, game.view.width);
         this.model.y = game.view.height;
+        this.model.moveSpeed = 10 * game.view.sizeMultiple;
         console.log(this.model.x, this.model.y);
     };
 };
