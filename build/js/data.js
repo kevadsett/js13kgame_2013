@@ -41,9 +41,8 @@ var globalLevelData = {
             ]
         }
     ]
-};
-
-var globalAnimData = {
+},
+globalAnimData = {
     player: {
         run: {
             filename: "images/run.png",
@@ -75,4 +74,4 @@ var globalAnimData = {
             }
         }
     }
-}
+};

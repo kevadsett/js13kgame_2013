@@ -5,9 +5,8 @@ var LevelModel = function(levelData) {
     }
     
     this.initialise(levelData);
-};
-
-var LevelView = function(model) {
+},
+LevelView = function(model) {
     this.model = model;
     
     this.initialise = function() {
@@ -26,20 +25,25 @@ var LevelView = function(model) {
     };
     
     this.render = function() {
-        var ctx = game.view.context;
+        var ctx = game.view.context,
+            stairWidth = (this.width/7.7), 
+            stairHeight = (this.height/5),
+            i,
+            num,
+            currentDoor,
+            currentSwitch;
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(0, 0, this.width, this.height);
-        var stairWidth = (this.width/7.7), stairHeight = this.height/5;
-        for (var i = 0; i < 5; i++) {
-            var num = Math.ceil(mapValue(i, 0, 4, 17, 255)).toString(16);
+        for (i = 0; i < 5; i++) {
+            num = Math.ceil(mapValue(i, 0, 4, 17, 255)).toString(16);
             ctx.fillStyle = "#" + num + num + num;
             ctx.fillRect(this.width - stairWidth, this.height - ((i+1) * stairHeight), stairWidth, stairHeight);
         };
         
         ctx.fillStyle = "#111111";
         
-        for (var i = 0; i < this.model.doors.length; i++) {
-            var currentDoor = this.model.doors[i];
+        for (i = 0; i < this.model.doors.length; i++) {
+            currentDoor = this.model.doors[i];
             if(currentDoor.position == "closed"){
                 ctx.fillRect(this.doorPositions[i], 0, game.view.pixelSize * 3, this.height);
             } else {
@@ -47,8 +51,8 @@ var LevelView = function(model) {
                 ctx.fillRect(this.doorPositions[i], this.height - game.view.pixelSize * 3, game.view.pixelSize * 3, game.view.pixelSize * 3);
             };
         };
-        for (var i = 0; i < this.model.switches.length; i++) {
-            var currentSwitch = this.model.switches[i];
+        for (i = 0; i < this.model.switches.length; i++) {
+            currentSwitch = this.model.switches[i];
             ctx.fillRect(
                 this.switchPositions[i] - (game.view.pixelSize * 2), 
                 this.height/2 - game.view.pixelSize, 
@@ -73,25 +77,28 @@ var LevelView = function(model) {
     };
     
     this.resize = function() {
-        var canvas = document.getElementById('gameCanvas');
+        var canvas = document.getElementById('gameCanvas'),
+            i,
+            switchesAt = new Array(this.model.doors.length),
+            switchPos;
+            
         this.width = canvas.width;
         this.height = canvas.height;
         
         this.doorPositions = [];
 
-        for (var i = 0; i < this.model.doors.length; i++) {
+        for (i = 0; i < this.model.doors.length; i++) {
             this.doorPositions.push(mapValue(i+1, 0, this.model.doors.length+1, 0, this.width));
         };
         
         this.switchPositions = [];
         
-        var switchesAt = new Array(this.model.doors.length);
-        for(var i = 0; i < this.model.doors.length; i++) {
+        for(i = 0; i < this.model.doors.length; i++) {
             switchesAt[i] = [];
         };
-        for (var i = 0; i < this.model.switches.length; i++) {
+        for (i = 0; i < this.model.switches.length; i++) {
             switchesAt[this.model.switches[i].position].push(this.model.switches[i]);
-            var switchPos = (this.width/14 * switchesAt[this.model.switches[i].position].length);
+            switchPos = (this.width/14 * switchesAt[this.model.switches[i].position].length);
             this.switchPositions.push(this.doorPositions[this.model.switches[i].position] - switchPos);
         };
     };

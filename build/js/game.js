@@ -2,8 +2,11 @@ var GameModel = function() {
     console.log("New game initialised");
     
     this.levels = [];
-    for(var i = 0; i < globalLevelData.levels.length; i++) {
-        var newLevelModel = new LevelModel(globalLevelData.levels[i]);
+    var i,
+        newLevelModel,
+        self=this;
+    for(i = 0; i < globalLevelData.levels.length; i++) {
+        newLevelModel = new LevelModel(globalLevelData.levels[i]);
         this.levels.push(newLevelModel);
     };
 
@@ -11,8 +14,6 @@ var GameModel = function() {
     this.currentLevel = this.levels[this.currentLevelIndex];
     
     this.player = new PlayerModel();
-    
-    var self = this;
     
     this.initialiseViews = function() {
         this.view = new GameView(this);
@@ -22,9 +23,11 @@ var GameModel = function() {
     
     this.activateSwitch = function(switchID) {
         if(self.currentLevel.switches[switchID]) {
-            var connectedDoors = self.currentLevel.switches[switchID].connectedDoors;
-            for(var i = 0; i < connectedDoors.length; i++) {
-                var currentDoor = self.currentLevel.doors[connectedDoors[i]];
+            var connectedDoors = self.currentLevel.switches[switchID].connectedDoors,
+                i,
+                currentDoor;
+            for(i = 0; i < connectedDoors.length; i++) {
+                currentDoor = self.currentLevel.doors[connectedDoors[i]];
                 currentDoor.position = currentDoor.position == "open" ? "closed" : "open";
             };
         };
@@ -58,17 +61,15 @@ var GameModel = function() {
         console.log("Game resizing!");
         this.view.resize();
     }
-};
-
-var GameView = function(gameModel) {
+},
+GameView = function(gameModel) {
     
     this.model = gameModel;
     
     this.initialise = function() {
         console.log("Initialising game view");
-        var self = this;
-        
-        var canvas = document.getElementById('gameCanvas');
+        var self = this,
+            canvas = document.getElementById('gameCanvas')
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext('2d');
@@ -78,9 +79,10 @@ var GameView = function(gameModel) {
         };
         
         canvas.onclick = function(event) {
-            var clickedIndex = self.level.getClickedSwitch(event.clientX, event.clientY);
+            var clickedIndex = self.level.getClickedSwitch(event.clientX, event.clientY),
+                i = 0;
             if (clickedIndex > -1) {
-                var i = self.player.model.positionIndex;
+                i = self.player.model.positionIndex;
                 while (i != clickedIndex && i < self.level.model.doors.length) {
                     if(i > clickedIndex) i--;
                     if(self.level.model.doors[i].position == "closed") return;
