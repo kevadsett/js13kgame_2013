@@ -20,7 +20,7 @@ LevelView = function(model) {
                 return i;
             };
         };
-        if (x > 670) return 99;
+        if (x > this.width - this.width/7.7) return 99;
         return -1;
     };
     

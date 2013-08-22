@@ -89,10 +89,9 @@ GameView = function(gameModel) {
                     if(i < clickedIndex) i++;
                 };
                 if(clickedIndex < 99) {
-                    self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - 25, self.model.activateSwitch, clickedIndex);
+                    self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - self.height/8, self.model.activateSwitch, clickedIndex);
                 } else {
-                    console.log("You clicked on the stairs!");
-                    self.player.model.moveToPosition(720, self.player.model.moveUpstairs, self.model.startNextLevel);
+                    self.player.model.moveToPosition(self.width - (self.width/7.7)/2, self.player.model.moveUpstairs, self.model.startNextLevel);
                 };
             };
         };
