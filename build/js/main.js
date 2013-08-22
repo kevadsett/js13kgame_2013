@@ -10,8 +10,8 @@
 
 function resizeCanvas(){
     var canvas = document.getElementById("gameCanvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = document.getElementById("canvasContainer").clientWidth;
+    canvas.height = canvas.width / 3.85;
     game.resize();
 };
 
@@ -19,9 +19,6 @@ function startGame(){
     window.game = new GameModel();
     game.initialiseViews();
     window.touchRadius = 42;
-    var canvas = document.getElementById("gameCanvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
     resizeCanvas();
     window.onresize = window.resizeCanvas;
 };

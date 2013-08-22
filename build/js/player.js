@@ -1,6 +1,7 @@
 var PlayerModel = function() {
-    this.x = this.targetX = 50;
-    this.y = 200;
+    var canvas = document.getElementById('gameCanvas');
+    this.x = this.targetX = canvas.width / 14;
+    this.y = canvas.height;
     this.moveSpeed = 10;
     this.moveDirection = "none";
     this.positionIndex = 0;
@@ -22,8 +23,8 @@ var PlayerModel = function() {
     }
     
     this.reset = function() {
-        this.x = 50;
-        this.y = 200;
+        this.x = game.view.sizeMultiple * 50;
+        this.y = game.view.height;
         this.positionIndex = 0;
         this.moveDirection = "none";
     }
@@ -70,6 +71,15 @@ var PlayerView = function(model) {
         }
         var currentFrame = this.runFrames[Math.ceil(this.animIndex)];
         
-        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, game.view.levelX + this.model.x - currentFrame.w/2, game.view.levelY + this.model.y - currentFrame.h, currentFrame.w, currentFrame.h);
-    }
+        var sizeMultiple = mapValue(game.view.pixelSize, 0, 4, 0, 1);
+        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2 * sizeMultiple, this.model.y - currentFrame.h * sizeMultiple, currentFrame.w * sizeMultiple, currentFrame.h * sizeMultiple);
+    };
+    
+    this.resize = function() {
+        console.log(this.model.x);
+        console.log(game.view.prevWidth);
+        this.model.x = mapValue(this.model.x, 0, game.view.prevWidth, 0, game.view.width);
+        this.model.y = game.view.height;
+        console.log(this.model.x, this.model.y);
+    };
 };

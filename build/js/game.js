@@ -78,7 +78,7 @@ var GameView = function(gameModel) {
         };
         
         canvas.onclick = function(event) {
-            var clickedIndex = self.level.getClickedSwitch(event.clientX - self.levelX, event.clientY - self.levelY);
+            var clickedIndex = self.level.getClickedSwitch(event.clientX, event.clientY);
             if (clickedIndex > -1) {
                 var i = self.player.model.positionIndex;
                 while (i != clickedIndex && i < self.level.model.doors.length) {
@@ -95,7 +95,6 @@ var GameView = function(gameModel) {
             };
         };
         
-        this.pixelSize = 4;
         this.player = new PlayerView(this.model.player);
         this.setupLevelView();
         
@@ -120,11 +119,14 @@ var GameView = function(gameModel) {
     this.resize = function() {
         console.log("Game view resizing");
         var canvas = document.getElementById('gameCanvas');
+        this.prevWidth = this.width;
+        this.prevHeight = this.height;
         this.height = canvas.height;
         this.width = canvas.width;
-        this.levelX = this.width / 2 - this.level.width / 2;
-        this.levelY = this.height / 2 - this.level.height / 2;
-        console.log(this.levelX, this.levelY);
+        this.pixelSize = canvas.height * 0.02;
+        this.sizeMultiple = mapValue(game.view.pixelSize, 0, 4, 0, 1);
+        this.level.resize();
+        this.player.resize();
     };
     
     this.initialise();
