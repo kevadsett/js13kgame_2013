@@ -10,8 +10,11 @@
 
 function resizeCanvas(){
     var canvas = document.getElementById("gameCanvas");
-    canvas.width = document.getElementById("canvasContainer").clientWidth;
+    var container = document.getElementById("canvasContainer");
+    canvas.width = container.clientWidth;
     canvas.height = canvas.width / 3.85;
+    container.style.marginTop = -canvas.height / 2;
+    container.style.marginLeft = -canvas.width / 2;
     game.resize();
 };
 

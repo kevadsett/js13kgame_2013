@@ -79,7 +79,8 @@ GameView = function(gameModel) {
         };
         
         canvas.onclick = function(event) {
-            var clickedIndex = self.level.getClickedSwitch(event.clientX, event.clientY),
+            var canvasBounds = event.target.getBoundingClientRect(),
+                clickedIndex = self.level.getClickedSwitch(event.clientX - canvasBounds.left, event.clientY - canvasBounds.top),
                 i = 0;
             if (clickedIndex > -1) {
                 i = self.player.model.positionIndex;
