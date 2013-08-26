@@ -10,15 +10,31 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72-precomposed.png" />
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114-precomposed.png" />
         <link rel="stylesheet" type="text/css"href="css/main.css"/>
-        <script type="text/javascript" language="javascript" src="js/data.js"></script>
+        <script type="text/javascript">
+            LateRunner = {debugMode:true};
+        </script>
+        <!--<script type="text/javascript" language="javascript" src="js/data.js"></script>
         <script type="text/javascript" language="javascript" src="js/events.js"></script>
         <script type="text/javascript" language="javascript" src="js/level.js"></script>
         <script type="text/javascript" language="javascript" src="js/player.js"></script>
         <script type="text/javascript" language="javascript" src="js/utils.js"></script>
-        <script type="text/javascript" language="javascript" src="js/game.js"></script>
+        <script type="text/javascript" language="javascript" src="js/game.js"></script>-->
+        <script type="text/javascript" language="javascript" src="js/controllers/GameController.js"></script>
+        <script type="text/javascript" language="javascript" src="js/controllers/ResizeController.js"></script>
+        <script type="text/javascript" language="javascript" src="js/controllers/ModelFactory.js"></script>
+        <script type="text/javascript" language="javascript" src="js/data/animation.js"></script>
+        <script type="text/javascript" language="javascript" src="js/data/levels.js"></script>
+        <script type="text/javascript" language="javascript" src="js/models/datatypes/vector.js"></script>
+        <script type="text/javascript" language="javascript" src="js/models/GameModel.js"></script>
+        <script type="text/javascript" language="javascript" src="js/models/LevelModel.js"></script>
+        <script type="text/javascript" language="javascript" src="js/models/DoorModel.js"></script>
+        <script type="text/javascript" language="javascript" src="js/models/PlayerModel.js"></script>
+        <script type="text/javascript" language="javascript" src="js/utils/utils.js"></script>
+        <script type="text/javascript" language="javascript" src="js/views/GameView.js"></script>
+        <script type="text/javascript" language="javascript" src="js/views/LevelView.js"></script>
         <script type="text/javascript" language="javascript" src="js/main.js"></script>
     </head>
-    <body onload = "startGame()">
+    <body onload = "LateRunner.startGame()">
         <div id="canvasContainer">
             <canvas id="gameCanvas"></canvas>
         </div>

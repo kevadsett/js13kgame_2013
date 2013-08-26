@@ -7,21 +7,13 @@
             window.setTimeout(callback, 1000 / 60);
           };
 })();
+if(!console || !console.log) {
+    console = {log:function(){}};
+}
 
-function resizeCanvas(){
-    var canvas = document.getElementById("gameCanvas");
-    var container = document.getElementById("canvasContainer");
-    canvas.width = container.clientWidth;
-    canvas.height = canvas.width / 3.85;
-    container.style.marginTop = -canvas.height / 2;
-    container.style.marginLeft = -canvas.width / 2;
-    game.resize();
-};
-
-function startGame(){
-    window.game = new GameModel();
-    game.initialiseViews();
-    window.touchRadius = 42;
-    resizeCanvas();
-    window.onresize = window.resizeCanvas;
+LateRunner.startGame = function(){
+    console.log("LateRunner::startGame");
+    var gameModel = new GameModel();
+    LateRunner.game = new GameController(gameModel);
+    window.onresize = (LateRunner.game.resizeController.resizeGame).bind(LateRunner.game.resizeController);
 };

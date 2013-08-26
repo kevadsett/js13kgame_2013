@@ -5,15 +5,20 @@ var GameModel = function() {
     var i,
         newLevelModel,
         self=this;
-    for(i = 0; i < globalLevelData.levels.length; i++) {
-        newLevelModel = new LevelModel(globalLevelData.levels[i]);
-        this.levels.push(newLevelModel);
-    };
+        for(i = 0; i < globalLevelData.levels.length; i++) {
+            newLevelModel = new LevelModel(globalLevelData.levels[i]);
+            this.levels.push(newLevelModel);
+        };
 
     this.currentLevelIndex = 0;
     this.currentLevel = this.levels[this.currentLevelIndex];
     
     this.player = new PlayerModel();
+    this.x = 0;
+    this.y = 0;
+    this.transitioning = false;
+    this.transitionedHalf = false;
+    this.transitionSpeed = 4;
     
     this.initialiseViews = function() {
         this.view = new GameView(this);
@@ -39,7 +44,7 @@ var GameModel = function() {
             this.activateSwitch(numberPressed -1);
         } else {
             if(characterString == "u") {
-                this.startNextLevel()
+                this.view.transitionToNextLevel();
             }
         };
     };
@@ -58,7 +63,6 @@ var GameModel = function() {
     }
     
     this.resize = function() {
-        console.log("Game resizing!");
         this.view.resize();
     }
 },
@@ -67,12 +71,12 @@ GameView = function(gameModel) {
     this.model = gameModel;
     
     this.initialise = function() {
-        console.log("Initialising game view");
         var self = this,
             canvas = document.getElementById('gameCanvas')
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext('2d');
+        this.backgroundColour = "#111111";
         document.onkeypress = function(event){
             var charCode = event.which || event.keyCode;
             self.model.onKeyPressed(String.fromCharCode(charCode));
@@ -92,7 +96,7 @@ GameView = function(gameModel) {
                 if(clickedIndex < 99) {
                     self.player.model.moveToPosition(self.level.switchPositions[clickedIndex] - self.height/8, self.model.activateSwitch, clickedIndex);
                 } else {
-                    self.player.model.moveToPosition(self.width - (self.width/7.7)/2, self.player.model.moveUpstairs, self.model.startNextLevel);
+                    self.player.model.moveToPosition(self.width - (self.width/7.7)/2, self.player.model.moveUpstairs, self.transitionToNextLevel);
                 };
             };
         };
@@ -108,18 +112,33 @@ GameView = function(gameModel) {
     }).bind(this);
     
     this.render = function() {
+        if(this.model.transitioning) {
+            this.model.y += this.model.transitionSpeed;
+            if(!this.model.transitionedHalf && this.model.y > this.height) {
+                this.model.y = -this.height;
+                this.model.transitionedHalf = true;
+                this.model.startNextLevel();
+            }
+            if(this.model.transitionedHalf && this.model.y > 0) {
+                this.model.y = 0;
+                this.model.transitionedHalf = false;
+                this.model.transitioning = false;
+            }
+        }
         this.context.clearRect(0, 0, this.width, this.height);
-        this.level.render();
-        this.player.render();
-        this.level.renderMask();
+        this.level.render(this.model.x, this.model.y);
+        this.player.render(this.model.x, this.model.y);
     };
+    
+    this.transitionToNextLevel = (function() {
+        this.model.transitioning = true;
+    }).bind(this);
     
     this.setupLevelView = function() {
         this.level = new LevelView(this.model.currentLevel);
     };
     
     this.resize = function() {
-        console.log("Game view resizing");
         var canvas = document.getElementById('gameCanvas');
         this.prevWidth = this.width;
         this.prevHeight = this.height;

@@ -1,13 +1,17 @@
 var PlayerModel = function() {
+    console.log("PlayerModel::Constructor");
     var canvas = document.getElementById('gameCanvas');
-    this.x = this.targetX = canvas.width / 14;
+    this.x = -canvas.width/14;
+    this.targetX = canvas.width / 14;
+    this.moveDirection = "right";
     this.y = canvas.height;
-    this.moveDirection = "none";
     this.positionIndex = 0;
+    this.destinationReachedCallback = null;
+    this.destinationReachedCallbackArgs = null;
     
     new PlayerView(this);
 
-    this.moveToPosition = function(newPosition, callback, callbackArgs) {
+    this.moveToPosition = function(newPosition, callback, callbackArgs) {   
         if(this.x < newPosition) this.moveDirection = "right";
         if(this.x > newPosition) this.moveDirection = "left";
         this.targetX = newPosition;
@@ -22,10 +26,15 @@ var PlayerModel = function() {
     }
     
     this.reset = function() {
-        this.x = game.view.sizeMultiple * 50;
-        this.y = game.view.height;
+        console.log("PlayerView::reset");
+        console.log(game.view.width);
+        this.x = -game.view.width/14;
+        this.targetX = -game.view.width / 14;
+        this.moveDirection = "right";
+        this.y = -game.view.height;
         this.positionIndex = 0;
-        this.moveDirection = "none";
+        this.destinationReachedCallback = null;
+        this.destinationReachedCallbackArgs = null;
     }
 },
 PlayerView = function(model) {
@@ -35,7 +44,7 @@ PlayerView = function(model) {
     this.animIndex = 3;
     this.runFrames = globalAnimData.player.run.right.frames;
     console.log(this.runFrames);
-    this.render = function() {
+    this.render = function(startX, startY) {
         var ctx = game.view.context,
             currentFrame;
         
@@ -47,7 +56,7 @@ PlayerView = function(model) {
             } else {
                 this.model.moveDirection = "none";
                 this.animIndex = 3;
-                this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
+                if(this.model.destinationReachedCallback) this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
             }
         } else if(this.model.moveDirection == "left") {
             if(this.model.x > this.model.targetX) {
@@ -57,25 +66,23 @@ PlayerView = function(model) {
             } else {
                 this.model.moveDirection = "none";
                 this.animIndex = 3;
-                this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
+                if(this.model.destinationReachedCallback) this.model.destinationReachedCallback(this.model.destinationReachedCallbackArgs);
             }
         } else if (this.model.moveDirection == "up") {
             if (this.model.y > 0) {
                 this.model.y -= this.model.moveSpeed;
             } else {
-                this.model.destinationReachedCallback();
+                if(this.model.destinationReachedCallback) this.model.destinationReachedCallback();
             }
         } else {
             // no movement
         }
         currentFrame = this.runFrames[Math.ceil(this.animIndex)];
         
-        ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, this.model.x - currentFrame.w/2 * game.view.sizeMultiple, this.model.y - currentFrame.h * game.view.sizeMultiple, currentFrame.w * game.view.sizeMultiple, currentFrame.h * game.view.sizeMultiple);
+        if(!game.transitioning) ctx.drawImage(this.imgObj, currentFrame.x, currentFrame.y, currentFrame.w, currentFrame.h, startX + this.model.x - currentFrame.w/2 * game.view.sizeMultiple, startY + this.model.y - currentFrame.h * game.view.sizeMultiple, currentFrame.w * game.view.sizeMultiple, currentFrame.h * game.view.sizeMultiple);
     };
     
     this.resize = function() {
-        console.log(this.model.x);
-        console.log(game.view.prevWidth);
         this.model.x = mapValue(this.model.x, 0, game.view.prevWidth, 0, game.view.width);
         this.model.y = game.view.height;
         this.model.moveSpeed = 10 * game.view.sizeMultiple;
