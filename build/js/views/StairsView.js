@@ -1,6 +1,7 @@
 function StairsView(model, context) {
     this.model = model;
     this.context = context;
+    LateRunner.events.on('render', this.render, this);
 }
 
 StairsView.prototype.render = function() {

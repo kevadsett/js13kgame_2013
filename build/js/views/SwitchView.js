@@ -1,6 +1,7 @@
 function SwitchView(model, context) {
     this.model = model;
     this.context = context;
+    LateRunner.events.on('render', this.render, this);
 }
 
 SwitchView.prototype.render = function() {

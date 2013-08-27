@@ -14,6 +14,7 @@ if(!console || !console.log) {
 LateRunner.startGame = function(){
     console.log("LateRunner::startGame");
     var gameModel = new GameModel();
+    LateRunner.events = new Events();
     LateRunner.game = new GameController(gameModel);
     window.onresize = (LateRunner.game.resizeController.resizeGame).bind(LateRunner.game.resizeController);
 };

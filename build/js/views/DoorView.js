@@ -1,6 +1,7 @@
 function DoorView(model, context) {
     this.model = model;
     this.context = context;
+    LateRunner.events.on('render', this.render, this);
 }
 
 DoorView.prototype.render = function() {

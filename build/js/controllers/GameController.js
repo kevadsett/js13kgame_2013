@@ -10,7 +10,6 @@ GameController.prototype.initialise = function(gameModel) {
     this.context = canvas.getContext('2d');
     this.setupGameModel(gameModel);
     this.setupGameViews();
-    this.distributeDataToModels();
     this.resizeController.resizeGame();
     this.gameLoop();
     
@@ -27,32 +26,25 @@ GameController.prototype.setupGameModel = function(gameModel) {
 
 GameController.prototype.setupGameViews = function() {
     LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
-    this.gameModel.views.push(new LevelView(this.gameModel.currentLevel, this.context));
+    new LevelView(this.gameModel.currentLevel, this.context);
     this.setupDoorViews();
     this.setupSwitchViews();
-    this.gameModel.views.push(new StairsView(this.gameModel.currentLevel.stairs, this.context));
+    new StairsView(this.gameModel.currentLevel.stairs, this.context);
 }
 
 GameController.prototype.setupDoorViews = function() {
     for(var i = 0; i < this.gameModel.currentLevel.doors.length; i++) {
-        this.gameModel.views.push(new DoorView(this.gameModel.currentLevel.doors[i], this.context));
+        new DoorView(this.gameModel.currentLevel.doors[i], this.context);
     }
 }
 
 GameController.prototype.setupSwitchViews = function() {
     for(var i = 0; i < this.gameModel.currentLevel.switches.length; i++) {
-        this.gameModel.views.push(new SwitchView(this.gameModel.currentLevel.switches[i], this.context));
+        new SwitchView(this.gameModel.currentLevel.switches[i], this.context);
     }
-}
-
-GameController.prototype.distributeDataToModels = function() {
-    this.gameModel.context = this.gameModel.currentLevel.context = this.context;
-    this.gameModel.currentLevel.pixelSize = this.gameModel.pixelSize;   
 }
 
 GameController.prototype.gameLoop = function() { 
     window.requestAnimFrame((this.gameLoop).bind(this), this);
-    for(var i = 0; i < this.gameModel.views.length; i++) {
-        this.gameModel.views[i].render();
-    }
+    LateRunner.events.trigger('render');
 };
