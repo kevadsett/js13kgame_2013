@@ -2,20 +2,34 @@ var ModelFactory = {};
 
 ModelFactory.createLevels = function(levelData) {
     console.log("ModelFactory::generateLevelModels");
-    var i, j,levels = [], doors = [], switches = [], newLevelData = {};
+    var i, levels = [];
     for(i = 0; i < levelData.levels.length; i++) {
-        newLevelData.doors = [];
-        for(j = 0; j < levelData.levels[i].doors.length; j++) {
-            newLevelData.doors.push(ModelFactory.createDoorModel(j, levelData.levels[i].doors[j]));
-        }
-        levelData.levels[i].doors = newLevelData.doors;
-        console.log(levelData.levels[i]);
+        levelData.levels[i].doors = ModelFactory.createDoorModels(i, levelData);
+        levelData.levels[i].switches = ModelFactory.createSwitchModels(i, levelData);
         newLevelModel = new LevelModel(i, levelData.levels[i]);
         levels.push(newLevelModel);
     };
     return levels;
 }
 
-ModelFactory.createDoorModel = function(index, doorData) {
-    return new DoorModel(index, doorData);
+ModelFactory.createDoorModels = function(levelIndex, levelData) {
+    var i, doorModels = [];
+    for(i = 0; i < levelData.levels[levelIndex].doors.length; i++) {
+        doorModels.push(new DoorModel(i, levelData.levels[levelIndex].doors[i]));
+    }
+    return doorModels;
+}
+
+ModelFactory.createSwitchModels = function(levelIndex, levelData) {
+    var i, switchModels = [], dataConnectedDoors, connectedDoors = [];
+    for(i = 0; i < levelData.levels[levelIndex].switches.length; i++) {
+        dataConnectedDoors = levelData.levels[levelIndex].switches[i].connectedDoors;
+        connectedDoors = [];
+        for(j = 0; j < dataConnectedDoors.length; j++) {
+            connectedDoors.push(levelData.levels[levelIndex].doors[dataConnectedDoors[j]]);
+        }
+        levelData.levels[levelIndex].switches[i].connectedDoors = connectedDoors;
+        switchModels.push(new SwitchModel(i, levelData.levels[levelIndex].switches[i]));
+    }
+    return switchModels;
 }

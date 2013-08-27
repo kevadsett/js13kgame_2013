@@ -15,33 +15,62 @@ ResizeController.prototype.resizeGame = function() {
     this.gameModel.prevHeight = this.gameModel.height;
     this.gameModel.height = this.gameModel.currentLevel.height = canvas.height;
     this.gameModel.width = this.gameModel.currentLevel.width = canvas.width;
-    this.gameModel.pixelSize = this.gameModel.currentLevel.pixelSize = canvas.height * 0.02;
-    this.gameModel.sizeMultiple = mapValue(this.gameModel.pixelSize, 0, 4, 0, 1);
+    LateRunner.pixelSize = canvas.height * 0.02;
+    this.gameModel.sizeMultiple = mapValue(LateRunner.pixelSize, 0, 4, 0, 1);
     this.resizeLevel(this.gameModel.width, this.gameModel.height);
     this.resizePlayer(this.gameModel.width, this.gameModel.height);
 };
 
 ResizeController.prototype.resizeLevel = function(newGameWidth, newGameHeight) {
     console.log("ResizeController::resizeLevel(" + newGameWidth + ", " + newGameHeight + ")");
-    var level = this.gameModel.currentLevel,
-        switchesAt = new Array(level.doors.length);
-    level.width = newGameWidth  ;
+    var level = this.gameModel.currentLevel;
+    level.width = newGameWidth;
     level.height = newGameHeight;
+    
+    this.resizeDoors(newGameWidth, newGameHeight);
+    this.resizeSwitches(newGameWidth, newGameHeight);
+    this.resizeStairs(newGameWidth, newGameHeight);
+}
 
+ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {
+    var level = this.gameModel.currentLevel,
+        i, 
+        currentDoor;
+    
     for (i = 0; i < level.doors.length; i++) {
+        currentDoor = level.doors[i];
+        currentDoor.height = newGameHeight;
+        currentDoor.width = currentDoor.openSegmentHeight = LateRunner.pixelSize * 4;
         level.doors[i].position = new Vector(mapValue(i+1, 0, level.doors.length+1, newGameWidth/7.7, newGameWidth), 0);
     };
-    
-    /*level.switchPositions = [];
+}
+
+ResizeController.prototype.resizeSwitches = function(newGameWidth, newGameHeight) {
+    var level = this.gameModel.currentLevel,
+        i, 
+        currentSwitch, 
+        switchesAt = new Array(level.doors.length), 
+        switchPos;
     
     for(i = 0; i < level.doors.length; i++) {
         switchesAt[i] = [];
     };
     for (i = 0; i < level.switches.length; i++) {
-        switchesAt[level.switches[i].position].push(level.switches[i]);
-        switchPos = (newGameWidth/14 * switchesAt[level.switches[i].position].length);
-        level.switchPositions.push(level.doorPositions[level.switches[i].position] - switchPos);
-    };*/
+        currentSwitch = level.switches[i];
+        switchesAt[currentSwitch.doorPosition].push(currentSwitch);
+        currentSwitch.radius = LateRunner.pixelSize * 2;
+        switchPos = newGameWidth/14 * switchesAt[currentSwitch.doorPosition].length;
+        currentSwitch.position = new Vector(level.doors[currentSwitch.doorPosition].position.x - switchPos, newGameHeight/2 - currentSwitch.radius);
+    };
+}
+
+ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) {
+    var level = this.gameModel.currentLevel,
+        stairs = level.stairs;
+    stairs.stepHeight = newGameHeight / stairs.numberOfSteps;
+    stairs.width = LateRunner.pixelSize * 24;
+    stairs.height = newGameHeight;
+    stairs.position.x = newGameWidth - stairs.width;
 }
 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {

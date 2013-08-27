@@ -1,27 +1,27 @@
 LateRunner.LevelData = {
     levels:[
         {
-            switches:[
-                { connectedDoors: [0], position: 0 }
-            ],
-            doors:[
-                { state: "closed" }
-            ]       
-        },
-        {
             switches:[ 
-                { connectedDoors: [0, 1], position: 0 },
-                { connectedDoors: [0, 1], position: 1 }
+                { connectedDoors: [0, 1], doorPosition: 0 },
+                { connectedDoors: [0, 1], doorPosition: 1 }
             ],
             doors:[
                 { state: "closed" },
                 { state: "open"}
             ]
         },
+            {
+            switches:[
+                { connectedDoors: [0], doorPosition: 0 }
+            ],
+            doors:[
+                { state: "closed" }
+            ]       
+        },
         {
             switches:[
-                { connectedDoors: [0, 1, 2], position: 0 },
-                { connectedDoors: [1], position: 1 }
+                { connectedDoors: [0, 1, 2], doorPosition: 0 },
+                { connectedDoors: [1], doorPosition: 1 }
             ],
             doors:[
                 { state: "closed" },
@@ -31,8 +31,8 @@ LateRunner.LevelData = {
         },
         {
             switches:[
-                { connectedDoors: [1, 2], position: 0 },
-                { connectedDoors: [1], position: 1 }
+                { connectedDoors: [1, 2], doorPosition: 0 },
+                { connectedDoors: [1], doorPosition: 1 }
             ],
             doors:[
                 { state: "open" },
