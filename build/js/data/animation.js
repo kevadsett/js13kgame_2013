@@ -1,7 +1,7 @@
 LateRunner.AnimData = {
     player: {
+        filename: "images/player.png",
         run: {
-            filename: "images/run.png",
             right: {
                 frames: [
                     {x:222,y:0,w:111,h:150},

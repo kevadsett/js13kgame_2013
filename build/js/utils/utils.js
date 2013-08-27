@@ -24,3 +24,16 @@ function hexColourStringToRgbObj(hexString) {
         bString = hexString.slice(4, 6);
     return {r: hexToDec(rString), g: hexToDec(gString), b: hexToDec(bString)};
 }
+
+function coordinateIsWithinBounds(x, y, top, right, bottom, left) {
+    return x >= left && x < right && y >= top && y < bottom;
+}
+
+function coordinateWasTouched(targetX, targetY, actualX, actualY) {
+    return coordinateIsWithinBounds(actualX, 
+                                    actualY, 
+                                    targetY - LateRunner.touchRadius, 
+                                    targetX + LateRunner.touchRadius,
+                                    targetY + LateRunner.touchRadius,
+                                    targetX - LateRunner.touchRadius);
+}

@@ -4,13 +4,28 @@ function GameController(gameModel) {
     
 GameController.prototype.initialise = function(gameModel) {
     console.log("GameController::initialise");
-    this.resizeController = new ResizeController(gameModel);
+    
+    LateRunner.directions = {
+        RIGHT: 1,
+        STILL: 0,
+        LEFT: -1
+    };
+    
+    LateRunner.touchRadius = 42;
     
     var canvas = document.getElementById("gameCanvas");
     this.context = canvas.getContext('2d');
     this.setupGameModel(gameModel);
     this.setupGameViews();
+    
+    this.resizeController = new ResizeController(gameModel);
     this.resizeController.resizeGame();
+    
+    this.playerController = new PlayerController(gameModel);
+    
+    this.userInputController = new UserInputController(gameModel);
+    
+    this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
     this.gameLoop();
     
 }
@@ -27,9 +42,10 @@ GameController.prototype.setupGameModel = function(gameModel) {
 GameController.prototype.setupGameViews = function() {
     LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
     new LevelView(this.gameModel.currentLevel, this.context);
-    this.setupDoorViews();
-    this.setupSwitchViews();
     new StairsView(this.gameModel.currentLevel.stairs, this.context);
+    this.setupSwitchViews();
+    new PlayerView(this.gameModel.player, this.context);
+    this.setupDoorViews();
 }
 
 GameController.prototype.setupDoorViews = function() {
@@ -46,5 +62,6 @@ GameController.prototype.setupSwitchViews = function() {
 
 GameController.prototype.gameLoop = function() { 
     window.requestAnimFrame((this.gameLoop).bind(this), this);
+    this.playerController.update();
     LateRunner.events.trigger('render');
 };

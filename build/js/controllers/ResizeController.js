@@ -11,12 +11,12 @@ ResizeController.prototype.resizeGame = function() {
     container.style.marginTop = -canvas.height / 2;
     container.style.marginLeft = -canvas.width / 2;
 
-    this.gameModel.prevWidth = this.gameModel.width;
-    this.gameModel.prevHeight = this.gameModel.height;
+    this.gameModel.prevWidth = this.gameModel.width || 0;
+    this.gameModel.prevHeight = this.gameModel.height || 0;
     this.gameModel.height = this.gameModel.currentLevel.height = canvas.height;
     this.gameModel.width = this.gameModel.currentLevel.width = canvas.width;
     LateRunner.pixelSize = canvas.height * 0.02;
-    this.gameModel.sizeMultiple = mapValue(LateRunner.pixelSize, 0, 4, 0, 1);
+    LateRunner.sizeMultiple = mapValue(LateRunner.pixelSize, 0, 4, 0, 1);
     this.resizeLevel(this.gameModel.width, this.gameModel.height);
     this.resizePlayer(this.gameModel.width, this.gameModel.height);
 };
@@ -76,4 +76,6 @@ ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {
     console.log("ResizeController::resizePlayer(" + newGameWidth + ", " + newGameHeight + ")");
     var player = this.gameModel.player;
+    player.position = new Vector(mapValue(player.x, 0, this.gameModel.prevWidth, 0, newGameWidth), newGameHeight);
+    player.moveSpeed = player.originalMoveSpeed * LateRunner.sizeMultiple;
 }
