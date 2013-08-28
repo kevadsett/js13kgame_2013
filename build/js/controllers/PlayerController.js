@@ -3,7 +3,7 @@ function PlayerController(model) {
     this.player = model.player;
     this.resetPosition();
     this.setupAnimationFrames();
-    LateRunner.events.on('moveToSwitch', this.onMoveToSwitch, this);
+    LateRunner.events.on('moveToObject', this.onMoveToObject, this);
 }
 
 PlayerController.prototype.resetPosition = function () {
@@ -31,7 +31,7 @@ PlayerController.prototype.update = function() {
             this.player.position.x = this.player.targetX;
             this.player.lastMoveDirection = LateRunner.directions.RIGHT;
             this.player.moveDirection = LateRunner.directions.STILL;
-            LateRunner.events.trigger('switchActivated', this.player.targetSwitch);
+            this.onTargetObjectReached();
         }
     } else if (this.player.moveDirection == LateRunner.directions.LEFT) {
         if(this.player.position.x > this.player.targetX) {
@@ -42,7 +42,7 @@ PlayerController.prototype.update = function() {
             this.player.position.x = this.player.targetX;
             this.player.lastMoveDirection = LateRunner.directions.LEFT;
             this.player.moveDirection = LateRunner.directions.STILL;
-            LateRunner.events.trigger('switchActivated', this.player.targetSwitch);
+            this.onTargetObjectReached();
         }
     } else {
         if(this.player.lastMoveDirection == LateRunner.directions.RIGHT) {
@@ -53,13 +53,19 @@ PlayerController.prototype.update = function() {
     }
 }
 
-PlayerController.prototype.onMoveToSwitch = function(currentSwitch) {
-    this.player.targetX = currentSwitch.position.x;
-    this.player.targetSwitch = currentSwitch;
+PlayerController.prototype.onMoveToObject = function(targetObject) {
+    if(LateRunner.game.doorAndSwitchController.doorIsClosedBetween(this.player.position, targetObject.position)) return;
+    this.player.targetX = (targetObject.numberOfSteps) ? targetObject.position.x + targetObject.width/2 : targetObject.position.x;
+    this.player.targetObject = targetObject;
     if(this.player.targetX > this.player.position.x) this.player.moveDirection = LateRunner.directions.RIGHT;
     if(this.player.targetX < this.player.position.x) this.player.moveDirection = LateRunner.directions.LEFT;
 }
 
-PlayerController.prototype.onMoveToStairs = function(stairs) {
-    console.log("PlayerController::onMoveToSwitch: " + stairs);
+PlayerController.prototype.onTargetObjectReached = function() {
+    if(this.player.targetObject.numberOfSteps) {
+        LateRunner.events.trigger('stairsReached');
+    } else {
+        LateRunner.events.trigger('switchActivated', this.player.targetObject);
+    }
+    this.player.targetObject = null;
 }

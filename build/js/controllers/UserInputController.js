@@ -7,11 +7,7 @@ UserInputController.prototype.onCanvasClicked = function(event){
     var canvasBounds = event.target.getBoundingClientRect(),
         clickedObject = this.getClickedObject(event.clientX - canvasBounds.left, event.clientY - canvasBounds.top);
     if(clickedObject) {
-        if(clickedObject.numberOfSteps) {
-            LateRunner.events.trigger('moveToStairs', clickedObject);
-        } else {
-            LateRunner.events.trigger('moveToSwitch', clickedObject);
-        }
+        LateRunner.events.trigger('moveToObject', clickedObject);
     }
 };
 
