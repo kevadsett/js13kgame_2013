@@ -29,6 +29,8 @@ ResizeController.prototype.resizeLevel = function(newGameWidth, newGameHeight) {
     this.resizeDoors(newGameWidth, newGameHeight);
     this.resizeSwitches(newGameWidth, newGameHeight);
     this.resizeStairs(newGameWidth, newGameHeight);
+    
+    this.gameModel.levelTransitionSpeed = this.gameModel.originalLevelTransitionSpeed * LateRunner.sizeMultiple;
 }
 
 ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {

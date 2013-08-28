@@ -5,7 +5,7 @@ function GameModel() {
     this.player;
     this.levelTransitioningIn = false;
     this.levelTransitioningOut = false;
-    this.levelTransitionSpeed = 5;
+    this.originalLevelTransitionSpeed = 5;
     this.backgroundColour = {r:11, g:11, b:11};
     this.pixelSize = 4;
     this.sizeMultiple = 1;
