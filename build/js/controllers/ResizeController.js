@@ -3,7 +3,6 @@ function ResizeController(gameModel) {
 }
 
 ResizeController.prototype.resizeGame = function() {
-    console.log("ResizeController::resizeGame");
     var canvas = document.getElementById("gameCanvas"),
         container = document.getElementById("canvasContainer");
     canvas.width = container.clientWidth;
@@ -17,12 +16,12 @@ ResizeController.prototype.resizeGame = function() {
     this.gameModel.width = this.gameModel.currentLevel.width = canvas.width;
     LateRunner.pixelSize = canvas.height * 0.02;
     LateRunner.sizeMultiple = mapValue(LateRunner.pixelSize, 0, 4, 0, 1);
+    LateRunner.touchRadius = 42 * LateRunner.sizeMultiple;
     this.resizeLevel(this.gameModel.width, this.gameModel.height);
     this.resizePlayer(this.gameModel.width, this.gameModel.height);
 };
 
 ResizeController.prototype.resizeLevel = function(newGameWidth, newGameHeight) {
-    console.log("ResizeController::resizeLevel(" + newGameWidth + ", " + newGameHeight + ")");
     var level = this.gameModel.currentLevel;
     level.width = newGameWidth;
     level.height = newGameHeight;
@@ -74,8 +73,7 @@ ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) 
 }
 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {
-    console.log("ResizeController::resizePlayer(" + newGameWidth + ", " + newGameHeight + ")");
     var player = this.gameModel.player;
-    player.position = new Vector(mapValue(player.x, 0, this.gameModel.prevWidth, 0, newGameWidth), newGameHeight);
+    player.position = new Vector(mapValue(player.position.x, 0, this.gameModel.prevWidth, 0, newGameWidth), newGameHeight);
     player.moveSpeed = player.originalMoveSpeed * LateRunner.sizeMultiple;
 }

@@ -2,6 +2,7 @@ function StairsView(model, context) {
     this.model = model;
     this.context = context;
     LateRunner.events.on('render', this.render, this);
+    LateRunner.events.on('destroyViews', this.destroy, this);
 }
 
 StairsView.prototype.render = function() {
@@ -18,4 +19,9 @@ StairsView.prototype.render = function() {
     this.context.fillStyle = LateRunner.backgroundColour;
     
     this.context.fillRect(this.model.position.x - this.model.pixelSize, this.model.position.y, this.model.pixelSize, this.model.height);
+}
+
+StairsView.prototype.destroy = function(params) {
+    LateRunner.events.off('render', this.render)
+    delete this;
 }

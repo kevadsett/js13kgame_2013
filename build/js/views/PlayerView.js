@@ -2,6 +2,7 @@ function PlayerView(model, context) {
     this.model = model;
     this.context = context;
     LateRunner.events.on('render', this.render, this);
+    //LateRunner.events.on('destroyViews', this.destroy, this);
 }
 
 PlayerView.prototype.render = function() {
@@ -15,4 +16,9 @@ PlayerView.prototype.render = function() {
                            this.model.currentFrame.w * LateRunner.sizeMultiple,
                            this.model.currentFrame.h * LateRunner.sizeMultiple);
     this.context.fillStyle = "#FF0000";
+}
+
+PlayerView.prototype.destroy = function(params) {
+    LateRunner.events.off('render', this.render)
+    delete this;
 }

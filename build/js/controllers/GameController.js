@@ -22,10 +22,10 @@ GameController.prototype.initialise = function(gameModel) {
     this.resizeController.resizeGame();
     
     this.playerController = new PlayerController(gameModel);
-    
     this.userInputController = new UserInputController(gameModel);
-    
     this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
+    this.levelChangeController = new LevelChangeController(gameModel);
+    
     this.gameLoop();
     
 }
@@ -34,12 +34,14 @@ GameController.prototype.setupGameModel = function(gameModel) {
     console.log("GameController::setupGameModel");
     gameModel.touchRadius = 42;
     gameModel.levels = ModelFactory.createLevels(LateRunner.LevelData);
-    gameModel.currentLevel = gameModel.levels[0];
+    gameModel.currentLevelIndex = 0;
+    gameModel.currentLevel = gameModel.levels[gameModel.currentLevelIndex];
     gameModel.player = new PlayerModel();
     this.gameModel = gameModel;
 }
 
 GameController.prototype.setupGameViews = function() {
+    this.context.clearRect(0, 0, this.gameModel.width, this.gameModel.height);
     LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
     new LevelView(this.gameModel.currentLevel, this.context);
     new StairsView(this.gameModel.currentLevel.stairs, this.context);
