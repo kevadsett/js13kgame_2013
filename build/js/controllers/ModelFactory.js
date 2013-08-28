@@ -31,5 +31,6 @@ ModelFactory.createSwitchModels = function(levelIndex, levelData) {
         levelData.levels[levelIndex].switches[i].connectedDoors = connectedDoors;
         switchModels.push(new SwitchModel(i, levelData.levels[levelIndex].switches[i]));
     }
+    switchModels = switchModels.reverse();
     return switchModels;
 }
