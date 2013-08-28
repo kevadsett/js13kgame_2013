@@ -4,15 +4,14 @@ function LevelChangeController(model) {
     console.log(this);
 }
 
-LevelChangeController.prototype.startNextLevel = function() {
-    if(this.model.currentLevelIndex + 1 < this.model.levels.length) {
-        this.model.currentLevelIndex++;
-        this.model.currentLevel = this.model.levels[this.model.currentLevelIndex];
-        LateRunner.events.trigger('destroyViews');
-        LateRunner.game.setupGameViews()
-        LateRunner.game.resizeController.resizeGame()
-        LateRunner.game.playerController.resetPosition();
-    }
+LevelChangeController.prototype.startLevel = function(newLevelIndex) {
+    this.model.currentLevelIndex = newLevelIndex;
+    this.model.currentLevel = this.model.levels[this.model.currentLevelIndex];
+    LateRunner.events.trigger('destroyViews');
+    LateRunner.game.setupGameViews()
+    LateRunner.game.resizeController.resizeGame()
+    LateRunner.game.playerController.resetPosition();
+    LateRunner.game.doorAndSwitchController.resetDoors();
 }
 
 LevelChangeController.prototype.startLevelTransitionOut = function() {
@@ -29,7 +28,7 @@ LevelChangeController.prototype.transitionGameOut = function() {
     if(LateRunner.gameOffset.y < this.model.height) {
         LateRunner.gameOffset.y += this.model.levelTransitionSpeed;
     } else {
-        this.startNextLevel();
+        if(this.model.currentLevelIndex + 1 < this.model.levels.length) this.startLevel(this.model.currentLevelIndex+1);
         this.startLevelTransitionIn();
     }
 }

@@ -34,3 +34,10 @@ DoorAndSwitchController.prototype.doorIsClosedBetween = function(position1, posi
     }
     return false;
 }
+
+DoorAndSwitchController.prototype.resetDoors = function() {
+    var i, doors = this.model.currentLevel.doors;
+    for(i = 0; i < doors.length; i++) {
+        doors[i].state = doors[i].originalState;
+    }
+}
