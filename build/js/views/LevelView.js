@@ -1,5 +1,4 @@
 function LevelView(model, context) {
-    console.log("LevelView instantiated");
     this.model = model;
     this.context = context;
     LateRunner.events.on('render', this.render, this);
@@ -8,7 +7,11 @@ function LevelView(model, context) {
 
 LevelView.prototype.render = function() {
     this.context.fillStyle = "#FFFFFF";
-    this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.position.y, this.model.width, this.model.height);
+    var levelX = LateRunner.gameOffset.x + this.model.position.x,
+        levelY = LateRunner.gameOffset.y + this.model.position.y;
+    this.context.fillRect(levelX, levelY, this.model.width, 3 * this.model.height / 5);
+    this.context.fillStyle = "#EEEEEE";
+    this.context.fillRect(levelX, levelY + 3 * this.model.height / 5, this.model.width, 2 * this.model.height / 5);
 }
 
 LevelView.prototype.destroy = function(params) {
