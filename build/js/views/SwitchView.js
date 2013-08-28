@@ -7,14 +7,14 @@ function SwitchView(model, context) {
 
 SwitchView.prototype.render = function() {
     this.context.fillRect(
-        this.model.position.x - this.model.radius,
-        this.model.position.y - (this.model.radius / 2),
+        LateRunner.gameOffset.x + this.model.position.x - this.model.radius,
+        LateRunner.gameOffset.y + this.model.position.y - (this.model.radius / 2),
         this.model.radius * 2, 
         this.model.radius
     );
     this.context.fillRect(
-        this.model.position.x - (this.model.radius / 2),
-        this.model.position.y - this.model.radius,
+        LateRunner.gameOffset.x + this.model.position.x - (this.model.radius / 2),
+        LateRunner.gameOffset.y + this.model.position.y - this.model.radius,
         this.model.radius, 
         this.model.radius * 2
     );

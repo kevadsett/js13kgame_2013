@@ -11,8 +11,8 @@ PlayerView.prototype.render = function() {
                            this.model.currentFrame.y, 
                            this.model.currentFrame.w, 
                            this.model.currentFrame.h, 
-                           this.model.position.x - this.model.currentFrame.w/2 * LateRunner.sizeMultiple,
-                           this.model.position.y - this.model.currentFrame.h * LateRunner.sizeMultiple,
+                           LateRunner.gameOffset.x + this.model.position.x - this.model.currentFrame.w/2 * LateRunner.sizeMultiple,
+                           LateRunner.gameOffset.y + this.model.position.y - this.model.currentFrame.h * LateRunner.sizeMultiple,
                            this.model.currentFrame.w * LateRunner.sizeMultiple,
                            this.model.currentFrame.h * LateRunner.sizeMultiple);
     this.context.fillStyle = "#FF0000";

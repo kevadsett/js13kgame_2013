@@ -8,10 +8,10 @@ function DoorView(model, context) {
 DoorView.prototype.render = function() {
     this.context.fillStyle = LateRunner.backgroundColour;
     if(this.model.state == "closed"){
-        this.context.fillRect(this.model.position.x, this.model.position.y, this.model.width, this.model.height);
+        this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.position.y, this.model.width, this.model.height);
     } else {
-        this.context.fillRect(this.model.position.x, this.model.position.y, this.model.width, this.model.openSegmentHeight);
-        this.context.fillRect(this.model.position.x, this.model.position.y + this.model.height - this.model.openSegmentHeight, this.model.width, this.model.openSegmentHeight);
+        this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.position.y, this.model.width, this.model.openSegmentHeight);
+        this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.position.y + this.model.height - this.model.openSegmentHeight, this.model.width, this.model.openSegmentHeight);
     };
 }
 

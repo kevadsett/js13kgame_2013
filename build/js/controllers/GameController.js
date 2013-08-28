@@ -13,6 +13,8 @@ GameController.prototype.initialise = function(gameModel) {
     
     LateRunner.touchRadius = 42;
     
+    LateRunner.gameOffset = new Vector(0, 0);
+    
     var canvas = document.getElementById("gameCanvas");
     this.context = canvas.getContext('2d');
     this.setupGameModel(gameModel);
@@ -41,7 +43,6 @@ GameController.prototype.setupGameModel = function(gameModel) {
 }
 
 GameController.prototype.setupGameViews = function() {
-    this.context.clearRect(0, 0, this.gameModel.width, this.gameModel.height);
     LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
     new LevelView(this.gameModel.currentLevel, this.context);
     new StairsView(this.gameModel.currentLevel.stairs, this.context);
@@ -63,7 +64,13 @@ GameController.prototype.setupSwitchViews = function() {
 }
 
 GameController.prototype.gameLoop = function() { 
-    window.requestAnimFrame((this.gameLoop).bind(this), this);
+    this.context.clearRect(0, 0, this.gameModel.width, this.gameModel.height);
+    if(this.gameModel.levelTransitioningOut) {
+        this.levelChangeController.transitionGameOut();
+    } else if (this.gameModel.levelTransitioningIn) {
+        this.levelChangeController.transitionGameIn();
+    }
     this.playerController.update();
     LateRunner.events.trigger('render');
+    window.requestAnimFrame((this.gameLoop).bind(this), this);
 };

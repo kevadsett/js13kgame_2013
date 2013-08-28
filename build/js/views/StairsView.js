@@ -14,11 +14,11 @@ StairsView.prototype.render = function() {
                 b: Math.ceil(mapValue(i, 0, this.model.numberOfSteps - 1, backgroundColourObject.b, 255))
             });
         this.context.fillStyle = stairColour;
-        this.context.fillRect(this.model.position.x, this.model.height - ((i+1) * this.model.stepHeight), this.model.width, this.model.stepHeight);
+        this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.height - ((i+1) * this.model.stepHeight), this.model.width, this.model.stepHeight);
     };
     this.context.fillStyle = LateRunner.backgroundColour;
     
-    this.context.fillRect(this.model.position.x - this.model.pixelSize, this.model.position.y, this.model.pixelSize, this.model.height);
+    this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x - this.model.pixelSize, LateRunner.gameOffset.y + this.model.position.y, this.model.pixelSize, this.model.height);
 }
 
 StairsView.prototype.destroy = function(params) {

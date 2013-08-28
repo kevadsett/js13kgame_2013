@@ -8,7 +8,7 @@ function LevelView(model, context) {
 
 LevelView.prototype.render = function() {
     this.context.fillStyle = "#FFFFFF";
-    this.context.fillRect(this.model.position.x, this.model.position.y, this.model.width, this.model.height);
+    this.context.fillRect(LateRunner.gameOffset.x + this.model.position.x, LateRunner.gameOffset.y + this.model.position.y, this.model.width, this.model.height);
 }
 
 LevelView.prototype.destroy = function(params) {
