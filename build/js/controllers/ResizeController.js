@@ -60,7 +60,7 @@ ResizeController.prototype.resizeSwitches = function(newGameWidth, newGameHeight
         currentSwitch = level.switches[i];
         switchesAt[currentSwitch.doorPosition].push(currentSwitch);
         currentSwitch.radius = LateRunner.pixelSize * 2;
-        switchPos = newGameWidth/14 * switchesAt[currentSwitch.doorPosition].length;
+        switchPos = LateRunner.touchRadius * 1.5 * switchesAt[currentSwitch.doorPosition].length;
         currentSwitch.position = new Vector(level.doors[currentSwitch.doorPosition].position.x - switchPos, newGameHeight/2 - currentSwitch.radius);
     };
 }

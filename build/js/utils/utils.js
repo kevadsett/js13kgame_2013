@@ -37,3 +37,7 @@ function coordinateWasTouched(targetX, targetY, actualX, actualY) {
                                     targetY + LateRunner.touchRadius,
                                     targetX - LateRunner.touchRadius);
 }
+
+function randomInt(lo, hi) { 
+    return Math.ceil(lo + (Math.random * hi - lo));
+}

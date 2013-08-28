@@ -41,3 +41,19 @@ LevelChangeController.prototype.transitionGameIn = function() {
         LateRunner.events.trigger('levelStarted');
     }
 }
+
+LevelChangeController.prototype.startRandomLevel = function() {
+    var randomLevelData = {},
+        numberOfDoors = randomInt(1, 5),
+        numberOfSwitches = randomInt(1, 5),
+        switchPositions = new Array(numberOfSwitches),
+        levelIsCompletable = false;
+    
+    while (!levelIsCompletable) {
+        randomLevelData = {},
+        numberOfDoors = randomInt(1, 5),
+        numberOfSwitches = randomInt(1, 5),
+        switchPositions = new Array(numberOfSwitches);
+    }
+    this.model.currentLevel = new LevelModel();
+}
