@@ -7,9 +7,7 @@ function PlayerController(model) {
 }
 
 PlayerController.prototype.resetPosition = function () {
-    console.log(this.model.width);
     this.player.position = new Vector(this.model.width/14 * LateRunner.sizeMultiple, this.model.height);
-    console.log(this.player.position);
 }
 
 PlayerController.prototype.setupAnimationFrames = function() {
@@ -57,8 +55,15 @@ PlayerController.prototype.onMoveToObject = function(targetObject) {
     if(LateRunner.game.doorAndSwitchController.doorIsClosedBetween(this.player.position, targetObject.position)) return;
     this.player.targetX = (targetObject.numberOfSteps) ? targetObject.position.x + targetObject.width/2 : targetObject.position.x;
     this.player.targetObject = targetObject;
-    if(this.player.targetX > this.player.position.x) this.player.moveDirection = LateRunner.directions.RIGHT;
-    if(this.player.targetX < this.player.position.x) this.player.moveDirection = LateRunner.directions.LEFT;
+    if(this.player.targetX > this.player.position.x) {
+        this.player.moveDirection = LateRunner.directions.RIGHT;
+        this.player.targetX -= this.player.currentFrame.w;
+    } else if(this.player.targetX < this.player.position.x) {
+        this.player.moveDirection = LateRunner.directions.LEFT;
+        this.player.targetX += this.player.currentFrame.w;
+    } else {
+        this.onTargetObjectReached();
+    }
 }
 
 PlayerController.prototype.onTargetObjectReached = function() {
