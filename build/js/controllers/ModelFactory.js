@@ -2,7 +2,7 @@ var ModelFactory = {};
 
 ModelFactory.createLevels = function(levelData) {
     console.log("ModelFactory::generateLevelModels");
-    var i, levels = [];
+    var i, levels = [], newLevelModel;
     for(i = 0; i < levelData.levels.length; i++) {
         levelData.levels[i].doors = ModelFactory.createDoorModels(i, levelData);
         levelData.levels[i].switches = ModelFactory.createSwitchModels(i, levelData);
@@ -13,11 +13,17 @@ ModelFactory.createLevels = function(levelData) {
 }
 
 ModelFactory.createDoorModels = function(levelIndex, levelData) {
-    var i, doorModels = [];
+    var i, doorModels = [], newDoor;
     for(i = 0; i < levelData.levels[levelIndex].doors.length; i++) {
-        doorModels.push(new DoorModel(i, levelData.levels[levelIndex].doors[i]));
+        newDoor = this.createDoorModel(levelData.levels[levelIndex].doors[i]);
+        newDoor.id = i;
+        doorModels.push(newDoor);
     }
     return doorModels;
+}
+
+ModelFactory.createDoorModel = function(doorData) {
+    return new DoorModel(doorData);
 }
 
 ModelFactory.createSwitchModels = function(levelIndex, levelData) {

@@ -35,7 +35,8 @@ GameController.prototype.initialise = function(gameModel) {
 GameController.prototype.setupGameModel = function(gameModel) {
     console.log("GameController::setupGameModel");
     gameModel.touchRadius = 42;
-    gameModel.levels = ModelFactory.createLevels(LateRunner.LevelData);
+//    gameModel.levels = ModelFactory.createLevels(LateRunner.LevelData);
+    gameModel.levels = RandomLevelFactory.generateLevels(30);
     gameModel.currentLevelIndex = 0;
     gameModel.currentLevel = gameModel.levels[gameModel.currentLevelIndex];
     gameModel.player = new PlayerModel();

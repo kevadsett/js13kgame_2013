@@ -1,5 +1,5 @@
-function DoorModel(index, data) {
-    this.id = index;
+function DoorModel(data) {
+    this.id = -1;
     this.originalState = this.state = data.state;
-    this.position = new Vector(0, 0);
+    this.originalPosition = data.originalPosition;
 }

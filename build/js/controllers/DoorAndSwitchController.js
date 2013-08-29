@@ -11,6 +11,7 @@ DoorAndSwitchController.prototype.onSwitchActivated = function(activatedSwitch) 
 }
 
 DoorAndSwitchController.prototype.toggleDoorState = function(door) {
+    console.log("current door state: " + door.state);
     if(door.state == "closed") door.state = "open";
     else door.state = "closed";
 }
@@ -40,12 +41,4 @@ DoorAndSwitchController.prototype.resetDoors = function() {
     for(i = 0; i < doors.length; i++) {
         doors[i].state = doors[i].originalState;
     }
-}
-
-DoorAndSwitchController.prototype.configurationIsCompletable = function() {
-    // click first available switch
-    // if fewer doors are open than before, click it back
-    // move onto next available switch, 
-    // if no switch available, click
-    
 }
