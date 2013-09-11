@@ -27,6 +27,7 @@ GameController.prototype.initialise = function(gameModel) {
     this.userInputController = new UserInputController(gameModel);
     this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
     this.levelChangeController = new LevelChangeController(gameModel);
+    this.bossController = new BossController(gameModel);
     
     LateRunner.timerController = new TimerController(new TimerModel());
     
@@ -41,6 +42,7 @@ GameController.prototype.setupGameModel = function(gameModel) {
     gameModel.currentLevelIndex = 0;
     gameModel.currentLevel = gameModel.levels[gameModel.currentLevelIndex];
     gameModel.player = new PlayerModel();
+    gameModel.boss = new BossModel();
     this.gameModel = gameModel;
 }
 
@@ -51,6 +53,7 @@ GameController.prototype.setupGameViews = function() {
     this.setupSwitchViews();
     new PlayerView(this.gameModel.player, this.context);
     this.setupDoorViews();
+    new BossView(this.gameModel.boss, this.context);
 }
 
 GameController.prototype.setupDoorViews = function() {

@@ -19,6 +19,7 @@ ResizeController.prototype.resizeGame = function() {
     LateRunner.touchRadius = 42 * LateRunner.sizeMultiple;
     this.resizeLevel(this.gameModel.width, this.gameModel.height);
     this.resizePlayer(this.gameModel.width, this.gameModel.height);
+    this.resizeBoss(this.gameModel.width, this.gameModel.height);
 };
 
 ResizeController.prototype.resizeLevel = function(newGameWidth, newGameHeight) {
@@ -89,6 +90,12 @@ ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) 
 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {
     var player = this.gameModel.player;
+    console.log(player.position.x, this.gameModel.prevWidth);
     player.position = new Vector(mapValue(player.position.x, 0, this.gameModel.prevWidth, 0, newGameWidth), newGameHeight);
     player.moveSpeed = player.originalMoveSpeed * LateRunner.sizeMultiple;
+}
+
+ResizeController.prototype.resizeBoss = function(newGameWidth, newGameHeight) {
+    var boss = this.gameModel.boss;
+    boss.position = new Vector(mapValue(600, 0, 770, 0, newGameWidth), newGameHeight);
 }
