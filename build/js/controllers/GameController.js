@@ -17,33 +17,39 @@ GameController.prototype.initialise = function(gameModel) {
     
     var canvas = document.getElementById("gameCanvas");
     this.context = canvas.getContext('2d');
+    
     this.setupGameModel(gameModel);
-    this.setupGameViews();
-    
-    this.resizeController = new ResizeController(gameModel);
-    this.resizeController.resizeGame();
-    
-    this.playerController = new PlayerController(gameModel);
-    this.userInputController = new UserInputController(gameModel);
-    this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
-    this.levelChangeController = new LevelChangeController(gameModel);
     
     this.gameLoop();
     
+}
+
+GameController.prototype.onModelsReady = function() {
+    LateRunner.randomLevelFactory = new RandomLevelFactory(this.gameModel, 1);
+    LateRunner.resizeController = new ResizeController(this.gameModel);
+    LateRunner.playerController = new PlayerController(this.gameModel);
+    LateRunner.userInputController = new UserInputController(this.gameModel);
+    LateRunner.doorAndSwitchController = new DoorAndSwitchController(this.gameModel);
+    LateRunner.levelChangeController = new LevelChangeController(this.gameModel);
+    LateRunner.events.trigger("modelsReady");
 }
 
 GameController.prototype.setupGameModel = function(gameModel) {
     console.log("GameController::setupGameModel");
     gameModel.touchRadius = 42;
 //    gameModel.levels = ModelFactory.createLevels(LateRunner.LevelData);
-    gameModel.levels = RandomLevelFactory.generateLevels(30);
+//    gameModel.levels = ModelFactory.createLevels(this.randomLevelFactory.generateLevels());
     gameModel.currentLevelIndex = 0;
-    gameModel.currentLevel = gameModel.levels[gameModel.currentLevelIndex];
-    gameModel.player = new PlayerModel();
+    
     this.gameModel = gameModel;
+    
+    this.onModelsReady();
 }
 
 GameController.prototype.setupGameViews = function() {
+    this.gameModel.currentLevel = this.gameModel.levels[this.gameModel.currentLevelIndex];
+    console.log(this.gameModel);
+    
     LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
     new LevelView(this.gameModel.currentLevel, this.context);
     new StairsView(this.gameModel.currentLevel.stairs, this.context);
@@ -67,11 +73,11 @@ GameController.prototype.setupSwitchViews = function() {
 GameController.prototype.gameLoop = function() { 
     this.context.clearRect(0, 0, this.gameModel.width, this.gameModel.height);
     if(this.gameModel.levelTransitioningOut) {
-        this.levelChangeController.transitionGameOut();
+        LateRunner.levelChangeController.transitionGameOut();
     } else if (this.gameModel.levelTransitioningIn) {
-        this.levelChangeController.transitionGameIn();
+        LateRunner.levelChangeController.transitionGameIn();
     }
-    this.playerController.update();
+    LateRunner.playerController.update();
     LateRunner.events.trigger('render');
     window.requestAnimFrame((this.gameLoop).bind(this), this);
 };

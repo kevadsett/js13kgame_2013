@@ -1,8 +1,10 @@
 function ResizeController(gameModel) {
     this.gameModel = gameModel;
+    console.log(this.gameModel);
 }
 
 ResizeController.prototype.resizeGame = function() {
+    console.log(this.gameModel);
     var canvas = document.getElementById("gameCanvas"),
         container = document.getElementById("canvasContainer");
     canvas.width = container.clientWidth;
@@ -42,8 +44,6 @@ ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {
         currentDoor = level.doors[i];
         currentDoor.height = newGameHeight;
         currentDoor.width = currentDoor.openSegmentHeight = LateRunner.pixelSize * 4;
-        console.log(currentDoor.position);
-        console.log(this.gameModel.prevWidth);
         if(currentDoor.originalPosition) {
             currentDoor.position = new Vector(mapValue(currentDoor.originalPosition.x, 0, 770, newGameWidth/7.7, newGameWidth - newGameWidth/7.7), 0);
         } else {

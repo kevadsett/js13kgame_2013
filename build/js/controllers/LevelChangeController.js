@@ -1,7 +1,6 @@
 function LevelChangeController(model) {
     this.model = model;
     LateRunner.events.on('stairsReached', this.startLevelTransitionOut, this);
-    console.log(this);
 }
 
 LevelChangeController.prototype.startLevel = function(newLevelIndex) {
@@ -9,9 +8,9 @@ LevelChangeController.prototype.startLevel = function(newLevelIndex) {
     this.model.currentLevel = this.model.levels[this.model.currentLevelIndex];
     LateRunner.events.trigger('destroyViews');
     LateRunner.game.setupGameViews()
-    LateRunner.game.resizeController.resizeGame()
-    LateRunner.game.playerController.resetPosition();
-    LateRunner.game.doorAndSwitchController.resetDoors();
+    LateRunner.resizeController.resizeGame()
+    LateRunner.playerController.resetPosition();
+    LateRunner.doorAndSwitchController.resetDoors();
 }
 
 LevelChangeController.prototype.startLevelTransitionOut = function() {

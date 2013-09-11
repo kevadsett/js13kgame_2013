@@ -4,6 +4,9 @@ function DoorAndSwitchController(gameModel) {
 }
 
 DoorAndSwitchController.prototype.onSwitchActivated = function(activatedSwitch) {
+    console.log("DoorAndSwitchController::onSwitchActivated");
+    console.log(this.model);
+    console.log(activatedSwitch);
     var i;
     for(i = 0; i < activatedSwitch.connectedDoors.length; i++) {
         this.toggleDoorState(activatedSwitch.connectedDoors[i]);
@@ -11,7 +14,6 @@ DoorAndSwitchController.prototype.onSwitchActivated = function(activatedSwitch) 
 }
 
 DoorAndSwitchController.prototype.toggleDoorState = function(door) {
-    console.log("current door state: " + door.state);
     if(door.state == "closed") door.state = "open";
     else door.state = "closed";
 }

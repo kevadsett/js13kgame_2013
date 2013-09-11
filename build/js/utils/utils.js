@@ -41,3 +41,23 @@ function coordinateWasTouched(targetX, targetY, actualX, actualY) {
 function randomInt(lo, hi) { 
     return Math.round(lo + (Math.random() * (hi - lo)));
 }
+
+function cloneObject(objectToClone) {
+    var key, i, clonedArray = [];
+    var clone = {};
+    if(typeof objectToClone == "object") {
+        if(objectToClone.length == undefined) {
+            for(key in objectToClone){
+                clone[key] = cloneObject(objectToClone[key]);
+            }
+        } else { // we're an array or string
+            clone = objectToClone.slice(0)
+            for(i = 0; i < clone.length; i++) {
+                clone[i] = cloneObject(clone[i]);
+            }
+        }
+    } else { // we're a number or some other basic datatype
+        clone = objectToClone;
+    }
+    return clone;
+}

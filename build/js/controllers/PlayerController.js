@@ -52,7 +52,7 @@ PlayerController.prototype.update = function() {
 }
 
 PlayerController.prototype.onMoveToObject = function(targetObject) {
-    if(LateRunner.game.doorAndSwitchController.doorIsClosedBetween(this.player.position, targetObject.position)) return;
+    if(LateRunner.doorAndSwitchController.doorIsClosedBetween(this.player.position, targetObject.position)) return;
     this.player.targetX = (targetObject.numberOfSteps) ? targetObject.position.x + targetObject.width/2 : targetObject.position.x;
     this.player.targetObject = targetObject;
     if(this.player.targetX > this.player.position.x) {
