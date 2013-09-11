@@ -9,5 +9,4 @@ function GameModel() {
     this.backgroundColour = {r:11, g:11, b:11};
     this.pixelSize = 4;
     this.sizeMultiple = 1;
-    this.views = [];
 }
