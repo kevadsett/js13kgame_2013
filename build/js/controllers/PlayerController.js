@@ -3,6 +3,7 @@ function PlayerController(model) {
     this.player = model.player;
     this.resetPosition();
     this.setupAnimationFrames();
+    LateRunner.events.on('update', this.update, this);
     LateRunner.events.on('moveToObject', this.onMoveToObject, this);
 }
 

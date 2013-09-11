@@ -41,3 +41,11 @@ function coordinateWasTouched(targetX, targetY, actualX, actualY) {
 function randomInt(lo, hi) { 
     return Math.round(lo + (Math.random() * (hi - lo)));
 }
+
+function padNumber(number, digits) {
+    var number = "" + number;
+    while(number.length < digits) {
+        number = "0" + number;
+    }
+    return number;
+}
