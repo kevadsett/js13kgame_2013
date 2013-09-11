@@ -28,6 +28,8 @@ GameController.prototype.initialise = function(gameModel) {
     this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
     this.levelChangeController = new LevelChangeController(gameModel);
     
+    LateRunner.timerController = new TimerController(new TimerModel());
+    
     this.gameLoop();
     
 }
@@ -70,7 +72,7 @@ GameController.prototype.gameLoop = function() {
     } else if (this.gameModel.levelTransitioningIn) {
         this.levelChangeController.transitionGameIn();
     }
-    this.playerController.update();
+    LateRunner.events.trigger('update');
     LateRunner.events.trigger('render');
     window.requestAnimFrame((this.gameLoop).bind(this), this);
 };
