@@ -6,7 +6,8 @@ function BossController(model) {
 }
 
 BossController.prototype.update = function() {
-    if(Math.random() > 0.85) {
+    this.model.animIndex = (this.model.animIndex + 1) % 2;
+    if(Math.random() > 0.85 && this.model.animIndex == 0) {
         this.model.currentFrameIndex = (this.model.currentFrameIndex + 1) % 2;
         this.model.currentFrame = this.model.talkFrames[this.model.currentFrameIndex];
     }

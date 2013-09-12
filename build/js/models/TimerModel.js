@@ -1,5 +1,5 @@
 function TimerModel() {
-    this.minutes = 0;
-    this.seconds = 10;
+    this.minutes = 5;
+    this.seconds = 0;
     this.timing = true;
 }
