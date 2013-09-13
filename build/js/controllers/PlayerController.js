@@ -56,7 +56,7 @@ PlayerController.prototype.onMoveToObject = function(targetObject) {
     if(LateRunner.doorAndSwitchController.doorIsClosedBetween(this.player.position, targetObject.position)) return;
     this.player.targetX = (targetObject.numberOfSteps) ? targetObject.position.x + targetObject.width/2 : targetObject.position.x;
     this.player.targetObject = targetObject;
-    this.player.targetX -= this.player.currentFrame.w;
+    this.player.targetX -= this.player.currentFrame.w * LateRunner.sizeMultiple;
     if(this.player.targetX > this.player.position.x) {
         this.player.moveDirection = LateRunner.directions.RIGHT;
     } else if(this.player.targetX < this.player.position.x) {
@@ -68,10 +68,10 @@ PlayerController.prototype.onMoveToObject = function(targetObject) {
 
 PlayerController.prototype.onTargetObjectReached = function() {
         if(this.player.targetObject.numberOfSteps) {
-        LateRunner.events.trigger('stairsReached');
+        LateRunner.events.emit('stairsReached');
     } else {
         this.player.lastMoveDirection = LateRunner.directions.RIGHT;
-        LateRunner.events.trigger('switchActivated', this.player.targetObject);
+        LateRunner.events.emit('switchActivated', this.player.targetObject);
     }
     this.player.targetObject = null;
 }

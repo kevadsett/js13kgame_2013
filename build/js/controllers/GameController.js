@@ -28,6 +28,7 @@ GameController.prototype.initialise = function(gameModel) {
     LateRunner.doorAndSwitchController = new DoorAndSwitchController(gameModel);
     LateRunner.levelChangeController = new LevelChangeController(gameModel);
     LateRunner.bossController = new BossController(gameModel);
+    LateRunner.subtitleController = new SubtitleController(gameModel);
     
     LateRunner.timerController = new TimerController(new TimerModel());
     
@@ -58,6 +59,7 @@ GameController.prototype.setupGameViews = function() {
     }
     new PlayerView(this.gameModel.player, this.context);
     this.setupDoorViews();
+    new SubtitleView(this.gameModel);
 }
 
 GameController.prototype.setupDoorViews = function() {
@@ -79,7 +81,7 @@ GameController.prototype.gameLoop = function() {
     } else if (this.gameModel.levelTransitioningIn) {
         LateRunner.levelChangeController.transitionGameIn();
     }
-    LateRunner.events.trigger('update');
-    LateRunner.events.trigger('render');
+    LateRunner.events.emit('update');
+    LateRunner.events.emit('render');
     window.requestAnimFrame((this.gameLoop).bind(this), this);
 };

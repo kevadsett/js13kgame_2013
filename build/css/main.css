@@ -5,6 +5,8 @@ body {
     background-color: #111111;
     overflow:hidden;
     position:relative;
+    font-family: courier;
+    color: #FFF;
 }
 
 #canvasContainer {
@@ -19,6 +21,4 @@ body {
 
 #timer {
     display: inline-block;
-    font-family: courier;
-    color: #FFF;
 }

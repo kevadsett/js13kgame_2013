@@ -20,10 +20,12 @@
         <script type="text/javascript" language="javascript" src="js/controllers/UserInputController.js"></script>
         <script type="text/javascript" language="javascript" src="js/controllers/DoorAndSwitchController.js"></script>
         <script type="text/javascript" language="javascript" src="js/controllers/LevelChangeController.js"></script>
+        <script type="text/javascript" language="javascript" src="js/controllers/SubtitleController.js"></script>
         <script type="text/javascript" language="javascript" src="js/controllers/TimerController.js"></script>
         <script type="text/javascript" language="javascript" src="js/controllers/BossController.js"></script>
         <script type="text/javascript" language="javascript" src="js/data/animation.js"></script>
         <script type="text/javascript" language="javascript" src="js/data/levels.js"></script>
+        <script type="text/javascript" language="javascript" src="js/data/subtitles.js"></script>
         <script type="text/javascript" language="javascript" src="js/models/datatypes/Vector.js"></script>
         <script type="text/javascript" language="javascript" src="js/models/GameModel.js"></script>
         <script type="text/javascript" language="javascript" src="js/models/LevelModel.js"></script>
@@ -41,13 +43,15 @@
         <script type="text/javascript" language="javascript" src="js/views/StairsView.js"></script>
         <script type="text/javascript" language="javascript" src="js/views/PlayerView.js"></script>
         <script type="text/javascript" language="javascript" src="js/views/TimerView.js"></script>
+        <script type="text/javascript" language="javascript" src="js/views/SubtitleView.js"></script>
         <script type="text/javascript" language="javascript" src="js/views/BossView.js"></script>
         <script type="text/javascript" language="javascript" src="js/main.js"></script>
     </head>
     <body onload = "LateRunner.startGame()">
+        <div id="timer"></div>
         <div id="canvasContainer">
             <canvas id="gameCanvas"></canvas>
         </div>
-        <div id="timer"></div>
+        <div id="subtitles"></div>
     </body>
 </html>

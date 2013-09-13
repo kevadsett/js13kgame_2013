@@ -15,16 +15,21 @@ TimerController.prototype.update = function() {
 }
 
 TimerController.prototype.updateTime = function() {
+    LateRunner.events.emit('timeTick');
     this.model.seconds = (this.model.seconds + 60 - 1) % 60;
     if(this.model.seconds == 59) 
     {
         this.model.minutes--;
         if(this.model.minutes < 0) {
-            LateRunner.events.trigger('timeup');
-            console.log('timeup');
+            LateRunner.events.emit('timeup');
+            this.onTimeUp();
             this.model.timing = false;
         }
     }
+}
+
+TimerController.prototype.onTimeUp = function() {
+    this.model.timeUp = true;
 }
 
 TimerController.prototype.getTimeLeftAsString = function() {

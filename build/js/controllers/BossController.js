@@ -1,7 +1,6 @@
 function BossController(model) {
     this.model = model.boss;
     LateRunner.events.on('update', this.update, this);
-    LateRunner.events.on('moveToObject', this.onMoveToObject, this);
     LateRunner.events.on('seenByBoss', this.startTalking, this);
     this.setupAnimationFrames();
 }

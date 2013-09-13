@@ -8,7 +8,7 @@ UserInputController.prototype.onCanvasClicked = function(event){
     var canvasBounds = event.target.getBoundingClientRect(),
         clickedObject = this.getClickedObject(event.clientX - canvasBounds.left, event.clientY - canvasBounds.top);
     if(clickedObject) {
-        LateRunner.events.trigger('moveToObject', clickedObject);
+        LateRunner.events.emit('moveToObject', clickedObject);
     }
 };
 

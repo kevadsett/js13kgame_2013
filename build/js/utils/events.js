@@ -1,30 +1,23 @@
 /**
 * minivents from https://github.com/allouis/minivents
 */
-function Events() {
-  var events = {}, slice = Array.prototype.slice;
-  return {
-    on: function (type, func, context) {
-      var list = events[type] || (events[type] = []);
-      return !!list.push({f:func, context:context});
-    },
-    off: function (type, func) {
-      var list = events[type], copy = slice.call(events[type]), i, j;
-      if(!func) return delete events[type];
-      for (i=0, j=list.length; i<j; i++) {
-        with(list[i]) {
-          if(func === f) copy.splice(i, 1);
-        }
-      } 
-      events[type] = copy;
-    },
-    trigger: function (type, args) {
-      if(!events[type]) return false;
-      if(args && !(args instanceof Array)) args = [args];
-      var list = events[type], i, j;
-      for(i=0, j=list.length; i<j; i++){
-        list[i].f.apply(list[i].context, args);
-      }
+function Events(target){
+  var events = {}, i, list, args, A = Array;
+  target = target || this
+    target.on = function(type, func, ctx){
+      events[type] || (events[type] = [])
+      events[type].push({f:func, c:ctx})
     }
-  };
+    target.off = function(type, func){
+      list = events[type] || []
+      i = list.length = func ? list.length : 0
+      while(~--i<0) func == list[i].f && list.splice(i,1)
+    }
+    target.emit = function(){
+      args = A.apply([], arguments)
+      list = events[args.shift()] || []
+      args = args[0] instanceof A && args[0] || args
+      i = list.length
+      for(j=0; j<i; j++) list[j].f.apply(list[j].c, args);
+    }
 }

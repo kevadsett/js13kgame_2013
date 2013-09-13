@@ -6,11 +6,17 @@ function LevelChangeController(model) {
 LevelChangeController.prototype.startLevel = function(newLevelIndex) {
     this.model.currentLevelIndex = newLevelIndex;
     this.model.currentLevel = this.model.levels[this.model.currentLevelIndex];
-    LateRunner.events.trigger('destroyViews');
+    LateRunner.events.emit('destroyViews');
     LateRunner.game.setupGameViews();
     LateRunner.resizeController.resizeGame()
     LateRunner.playerController.resetPosition();
     LateRunner.doorAndSwitchController.resetDoors();
+    console.log(!!this.model.currentLevel.boss);
+    if(this.model.currentLevel.boss) {
+        this.model.currentSubtitle = "";
+    } else {
+        this.model.currentSubtitle = LateRunner.subtitleController.getNewSubtitle();
+    }
 }
 
 LevelChangeController.prototype.startLevelTransitionOut = function() {
@@ -39,6 +45,6 @@ LevelChangeController.prototype.transitionGameIn = function() {
         LateRunner.gameOffset.y += this.model.levelTransitionSpeed;
     } else {
         LateRunner.gameOffset.y = 0;
-        LateRunner.events.trigger('levelStarted');
+        LateRunner.events.emit('levelStarted');
     }
 }
