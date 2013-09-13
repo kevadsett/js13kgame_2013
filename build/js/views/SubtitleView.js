@@ -4,6 +4,8 @@ function SubtitleView(model) {
     this.element = document.getElementById('subtitles');
 }
 
-SubtitleView.prototype.render = function() {
-    this.element.innerHTML = this.model.currentSubtitle;
-}
+SubtitleView.prototype = {
+    render: function() {
+        this.element.innerHTML = this.model.currentSubtitle;
+    }
+};

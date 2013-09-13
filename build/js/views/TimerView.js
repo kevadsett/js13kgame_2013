@@ -4,6 +4,8 @@ function TimerView(model) {
     this.element = document.getElementById('timer');
 }
 
-TimerView.prototype.render = function() {
-    this.element.innerHTML = LateRunner.timerController.getTimeLeftAsString();
+TimerView.prototype = {
+    render: function() {
+        this.element.innerHTML = LateRunner.timerController.getTimeLeftAsString();
+    }
 }
