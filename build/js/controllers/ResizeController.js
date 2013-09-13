@@ -27,9 +27,9 @@ ResizeController.prototype.resizeLevel = function(newGameWidth, newGameHeight) {
     level.width = newGameWidth;
     level.height = newGameHeight;
     
+    this.resizeStairs(newGameWidth, newGameHeight);
     this.resizeDoors(newGameWidth, newGameHeight);
     this.resizeSwitches(newGameWidth, newGameHeight);
-    this.resizeStairs(newGameWidth, newGameHeight);
     
     this.gameModel.levelTransitionSpeed = this.gameModel.originalLevelTransitionSpeed * LateRunner.sizeMultiple;
 }
@@ -43,12 +43,10 @@ ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {
         currentDoor = level.doors[i];
         currentDoor.height = newGameHeight;
         currentDoor.width = currentDoor.openSegmentHeight = LateRunner.pixelSize * 4;
-        console.log(currentDoor.position);
-        console.log(this.gameModel.prevWidth);
         if(currentDoor.originalPosition) {
-            currentDoor.position = new Vector(mapValue(currentDoor.originalPosition.x, 0, 770, newGameWidth/7.7, newGameWidth - newGameWidth/7.7), 0);
+            currentDoor.position = new Vector(mapValue(currentDoor.originalPosition.x, 0, 770, newGameWidth/10, newGameWidth - this.gameModel.currentLevel.stairs.width), 0);
         } else {
-            currentDoor.position = new Vector(mapValue(i+1, 0, level.doors.length+1, newGameWidth/7.7, newGameWidth - newGameWidth/7.7), 0);
+            currentDoor.position = new Vector(mapValue(i+1, 0, level.doors.length+1, newGameWidth/10, newGameWidth - this.gameModel.currentLevel.stairs.width), 0);
         }
     };
 }
@@ -56,25 +54,28 @@ ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {
 ResizeController.prototype.resizeSwitches = function(newGameWidth, newGameHeight) {
     var level = this.gameModel.currentLevel,
         i, 
+        j,
+        switchesAtDoor,
         currentSwitch, 
-        switchesAt = new Array(level.doors.length), 
-        switchPos;
+        switchesAt = new Array(level.doors.length),
+        newSwitchY;
     
     for(i = 0; i < level.doors.length; i++) {
-        switchesAt[i] = [];
+        switchesAtDoor = [];
+        for(j = 0; j < level.switches.length; j++) {
+            if(level.switches[j].doorPosition == i) {
+                switchesAtDoor.push(level.switches[j]);
+            }
+        }
+        switchesAt[i] = switchesAtDoor;
     };
-    for (i = 0; i < level.switches.length; i++) {
-        currentSwitch = level.switches[i];
-        switchesAt[currentSwitch.doorPosition].push(currentSwitch);
-        currentSwitch.radius = LateRunner.pixelSize * 2;
-        switchPos = LateRunner.touchRadius * 1.5 * switchesAt[currentSwitch.doorPosition].length;
-        if(currentSwitch.originalPosition) {
-            currentSwitch.position = new Vector(
-                mapValue(currentSwitch.originalPosition.x, 0, 770, newGameWidth/7.7, newGameWidth - newGameWidth/7.7), 
-                mapValue(currentSwitch.originalPosition.y, 0, 200, 0, newGameHeight)
-            );
-        } else {
-            currentSwitch.position = new Vector(level.doors[currentSwitch.doorPosition].position.x - switchPos, newGameHeight/2 - currentSwitch.radius);
+    
+    for (i = 0; i < level.doors.length; i++) {
+        for(j = 0; j < switchesAt[i].length; j++) {
+            currentSwitch = switchesAt[i][j];
+            newSwitchY = mapValue(j+1, 0, switchesAt[i].length+1, newGameHeight/10, newGameHeight - (newGameHeight/10));
+            currentSwitch.radius = LateRunner.pixelSize * 2;
+            currentSwitch.position = new Vector(level.doors[i].position.x - LateRunner.touchRadius, newSwitchY);
         }
     };
 }
@@ -90,7 +91,6 @@ ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) 
 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {
     var player = this.gameModel.player;
-    console.log(player.position.x, this.gameModel.prevWidth);
     player.position = new Vector(mapValue(player.position.x, 0, this.gameModel.prevWidth, 0, newGameWidth), newGameHeight);
     player.moveSpeed = player.originalMoveSpeed * LateRunner.sizeMultiple;
 }
