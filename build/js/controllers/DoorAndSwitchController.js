@@ -3,13 +3,15 @@ function DoorAndSwitchController(gameModel) {
     LateRunner.events.on('switchActivated', this.onSwitchActivated, this);
 }
 
-DoorAndSwitchController.prototype.onSwitchActivated = function(activatedSwitch) {
-    var i;
-    for(i = 0; i < activatedSwitch.connectedDoors.length; i++) {
-        this.toggleDoorState(activatedSwitch.connectedDoors[i]);
+DoorAndSwitchController.prototype = {
+    onSwitchActivated: function(activatedSwitch) {
+        var i;
+        for(i = 0; i < activatedSwitch.connectedDoors.length; i++) {
+            this.toggleDoorState(activatedSwitch.connectedDoors[i]);
+        }
+        if(this.model.currentLevel.boss) LateRunner.events.emit('seenByBoss');
     }
-    if(this.model.currentLevel.boss) LateRunner.events.emit('seenByBoss');
-}
+};
 
 DoorAndSwitchController.prototype.toggleDoorState = function(door) {
     if(door.state == "closed") door.state = "open";
