@@ -20,14 +20,14 @@ GameController.prototype.initialise = function(gameModel) {
     this.setupGameModel(gameModel);
     this.setupGameViews();
     
-    this.resizeController = new ResizeController(gameModel);
-    this.resizeController.resizeGame();
+    LateRunner.resizeController = new ResizeController(gameModel);
+    LateRunner.resizeController.resizeGame();
     
-    this.playerController = new PlayerController(gameModel);
-    this.userInputController = new UserInputController(gameModel);
-    this.doorAndSwitchController = new DoorAndSwitchController(gameModel);
-    this.levelChangeController = new LevelChangeController(gameModel);
-    this.bossController = new BossController(gameModel);
+    LateRunner.playerController = new PlayerController(gameModel);
+    LateRunner.userInputController = new UserInputController(gameModel);
+    LateRunner.doorAndSwitchController = new DoorAndSwitchController(gameModel);
+    LateRunner.levelChangeController = new LevelChangeController(gameModel);
+    LateRunner.bossController = new BossController(gameModel);
     
     LateRunner.timerController = new TimerController(new TimerModel());
     
@@ -47,13 +47,17 @@ GameController.prototype.setupGameModel = function(gameModel) {
 }
 
 GameController.prototype.setupGameViews = function() {
-    LateRunner.backgroundColour = rgbObjToHexColourString({r:17, g:17, b:17});
+    LateRunner.backgroundColour = rgbObjToHexColourString(this.gameModel.backgroundColour);
     new LevelView(this.gameModel.currentLevel, this.context);
-    new StairsView(this.gameModel.currentLevel.stairs, this.context);
     this.setupSwitchViews();
+    console.log(this.gameModel.currentLevel);
+    if(this.gameModel.currentLevel.boss) {
+        new BossView(this.gameModel.boss, this.context);
+    } else {
+        new StairsView(this.gameModel.currentLevel.stairs, this.context);
+    }
     new PlayerView(this.gameModel.player, this.context);
     this.setupDoorViews();
-    new BossView(this.gameModel.boss, this.context);
 }
 
 GameController.prototype.setupDoorViews = function() {
@@ -71,9 +75,9 @@ GameController.prototype.setupSwitchViews = function() {
 GameController.prototype.gameLoop = function() { 
     this.context.clearRect(0, 0, this.gameModel.width, this.gameModel.height);
     if(this.gameModel.levelTransitioningOut) {
-        this.levelChangeController.transitionGameOut();
+        LateRunner.levelChangeController.transitionGameOut();
     } else if (this.gameModel.levelTransitioningIn) {
-        this.levelChangeController.transitionGameIn();
+        LateRunner.levelChangeController.transitionGameIn();
     }
     LateRunner.events.trigger('update');
     LateRunner.events.trigger('render');

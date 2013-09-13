@@ -1,5 +1,6 @@
 function ResizeController(gameModel) {
     this.gameModel = gameModel;
+    window.onresize = this.resizeGame.bind(this);
 }
 
 ResizeController.prototype.resizeGame = function() {
@@ -44,9 +45,9 @@ ResizeController.prototype.resizeDoors = function(newGameWidth, newGameHeight) {
         currentDoor.height = newGameHeight;
         currentDoor.width = currentDoor.openSegmentHeight = LateRunner.pixelSize * 4;
         if(currentDoor.originalPosition) {
-            currentDoor.position = new Vector(mapValue(currentDoor.originalPosition.x, 0, 770, newGameWidth/10, newGameWidth - this.gameModel.currentLevel.stairs.width), 0);
+            currentDoor.position = new Vector(mapValue(currentDoor.originalPosition.x, 0, 770, newGameWidth/10, newGameWidth - newGameWidth/10), 0);
         } else {
-            currentDoor.position = new Vector(mapValue(i+1, 0, level.doors.length+1, newGameWidth/10, newGameWidth - this.gameModel.currentLevel.stairs.width), 0);
+            currentDoor.position = new Vector(mapValue(i+1, 0, level.doors.length+1, newGameWidth/10, newGameWidth - newGameWidth/10), 0);
         }
     };
 }
@@ -83,10 +84,12 @@ ResizeController.prototype.resizeSwitches = function(newGameWidth, newGameHeight
 ResizeController.prototype.resizeStairs = function(newGameWidth, newGameHeight) {
     var level = this.gameModel.currentLevel,
         stairs = level.stairs;
-    stairs.stepHeight = newGameHeight / stairs.numberOfSteps;
-    stairs.width = LateRunner.pixelSize * 24;
-    stairs.height = newGameHeight;
-    stairs.position.x = newGameWidth - stairs.width;
+    if(!!level.stairs) {
+        stairs.stepHeight = newGameHeight / stairs.numberOfSteps;
+        stairs.width = LateRunner.pixelSize * 24;
+        stairs.height = newGameHeight;
+        stairs.position.x = newGameWidth - stairs.width;
+    }
 }
 
 ResizeController.prototype.resizePlayer = function(newGameWidth, newGameHeight) {

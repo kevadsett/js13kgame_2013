@@ -8,10 +8,10 @@ DoorAndSwitchController.prototype.onSwitchActivated = function(activatedSwitch) 
     for(i = 0; i < activatedSwitch.connectedDoors.length; i++) {
         this.toggleDoorState(activatedSwitch.connectedDoors[i]);
     }
+    if(this.model.currentLevel.boss) LateRunner.events.trigger('seenByBoss');
 }
 
 DoorAndSwitchController.prototype.toggleDoorState = function(door) {
-    console.log("current door state: " + door.state);
     if(door.state == "closed") door.state = "open";
     else door.state = "closed";
 }

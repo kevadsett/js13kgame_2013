@@ -1,17 +1,16 @@
 function LevelChangeController(model) {
     this.model = model;
     LateRunner.events.on('stairsReached', this.startLevelTransitionOut, this);
-    console.log(this);
 }
 
 LevelChangeController.prototype.startLevel = function(newLevelIndex) {
     this.model.currentLevelIndex = newLevelIndex;
     this.model.currentLevel = this.model.levels[this.model.currentLevelIndex];
     LateRunner.events.trigger('destroyViews');
-    LateRunner.game.setupGameViews()
-    LateRunner.game.resizeController.resizeGame()
-    LateRunner.game.playerController.resetPosition();
-    LateRunner.game.doorAndSwitchController.resetDoors();
+    LateRunner.game.setupGameViews();
+    LateRunner.resizeController.resizeGame()
+    LateRunner.playerController.resetPosition();
+    LateRunner.doorAndSwitchController.resetDoors();
 }
 
 LevelChangeController.prototype.startLevelTransitionOut = function() {
@@ -25,11 +24,13 @@ LevelChangeController.prototype.startLevelTransitionIn = function() {
 }
 
 LevelChangeController.prototype.transitionGameOut = function() {
-    if(LateRunner.gameOffset.y < this.model.height) {
-        LateRunner.gameOffset.y += this.model.levelTransitionSpeed;
-    } else {
-        if(this.model.currentLevelIndex + 1 < this.model.levels.length) this.startLevel(this.model.currentLevelIndex+1);
-        this.startLevelTransitionIn();
+    if(this.model.currentLevelIndex + 1 < this.model.levels.length) {
+        if(LateRunner.gameOffset.y < this.model.height) {
+            LateRunner.gameOffset.y += this.model.levelTransitionSpeed;
+        } else {
+            this.startLevel(this.model.currentLevelIndex+1);
+            this.startLevelTransitionIn();
+        }
     }
 }
 

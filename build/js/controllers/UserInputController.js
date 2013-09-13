@@ -20,7 +20,7 @@ UserInputController.prototype.getClickedObject = function(x, y) {
             return currentSwitch;
         };
     };
-    if (x > this.model.width - this.model.currentLevel.stairs.width) return this.model.currentLevel.stairs;
+    if (this.model.currentLevel.stairs && x > this.model.width - this.model.currentLevel.stairs.width) return this.model.currentLevel.stairs;
     return null;
 }
 
@@ -30,12 +30,12 @@ UserInputController.prototype.onKeyPressed = function(event) {
     switch (keyCode) {
         case "u":
             if(this.model.currentLevelIndex + 1 < this.model.levels.length) {
-                LateRunner.game.levelChangeController.startLevel(this.model.currentLevelIndex + 1);
+                LateRunner.levelChangeController.startLevel(this.model.currentLevelIndex + 1);
             }
         break;
         case "d":
             if(this.model.currentLevelIndex - 1 >= 0) {
-                LateRunner.game.levelChangeController.startLevel(this.model.currentLevelIndex - 1);
+                LateRunner.levelChangeController.startLevel(this.model.currentLevelIndex - 1);
             }
         break;
     }
