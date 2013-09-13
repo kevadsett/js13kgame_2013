@@ -6,6 +6,7 @@ function SwitchView(model, context) {
 }
 
 SwitchView.prototype.render = function() {
+    this.context.fillStyle = LateRunner.backgroundColour;
     this.context.fillRect(
         LateRunner.gameOffset.x + this.model.position.x - this.model.radius,
         LateRunner.gameOffset.y + this.model.position.y - (this.model.radius / 2),

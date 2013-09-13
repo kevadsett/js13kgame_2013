@@ -32,10 +32,15 @@ LateRunner.AnimData = {
     },
     boss: {
         filename: "images/boss.png",
+        stand: {
+            frames: [
+                {x:0,y:0,w:90,h:150}
+            ]
+        },
         talk: {
             frames: [
-                {x:0,y:0,w:90,h:150},
-                {x:90,y:0,w:90,h:150}
+                {x:0,y:150,w:90,h:150},
+                {x:0,y:300,w:90,h:150}
             ]
         }
     }

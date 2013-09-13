@@ -65,6 +65,15 @@ LateRunner.LevelData = {
                 { state: "open" },
                 { state: "open" }
             ]
+        },
+        {
+            boss:true,
+            switches:[
+                { connectedDoors: [0], doorPosition: 0 }
+            ],
+            doors:[
+                { state: "closed" }
+            ]       
         }
     ]
 }
