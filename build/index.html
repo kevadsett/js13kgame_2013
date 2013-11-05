@@ -13,45 +13,12 @@
         <script type="text/javascript">
             LateRunner = {debugMode:true};
         </script>
-        <script type="text/javascript" language="javascript" src="js/controllers/GameController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/ResizeController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/ModelFactory.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/PlayerController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/UserInputController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/DoorAndSwitchController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/LevelChangeController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/SubtitleController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/TimerController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/controllers/BossController.js"></script>
-        <script type="text/javascript" language="javascript" src="js/data/animation.js"></script>
-        <script type="text/javascript" language="javascript" src="js/data/levels.js"></script>
-        <script type="text/javascript" language="javascript" src="js/data/subtitles.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/datatypes/vector.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/GameModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/LevelModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/DoorModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/SwitchModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/StairsModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/PlayerModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/TimerModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/models/BossModel.js"></script>
-        <script type="text/javascript" language="javascript" src="js/utils/utils.js"></script>
-        <script type="text/javascript" language="javascript" src="js/utils/events.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/LevelView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/DoorView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/SwitchView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/StairsView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/PlayerView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/TimerView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/SubtitleView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/views/BossView.js"></script>
-        <script type="text/javascript" language="javascript" src="js/main.js"></script>
-    </head>
+        <script type="text/javascript" language="javascript" src="js/code.js"></script>
     <body onload = "LateRunner.startGame()">
-        <div id="timer"></div>
         <div id="canvasContainer">
+            <div id="timer"></div>
             <canvas id="gameCanvas"></canvas>
+            <div id="subtitles"></div>
         </div>
-        <div id="subtitles"></div>
     </body>
 </html>

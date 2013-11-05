@@ -5,11 +5,13 @@ function ResizeController(gameModel) {
 ResizeController.prototype = {
     resizeGame: function() {
         var canvas = document.getElementById("gameCanvas"),
-            container = document.getElementById("canvasContainer");
+            container = document.getElementById("canvasContainer"),
+            subtitle = document.getElementById("subtitles");
         canvas.width = container.clientWidth;
         canvas.height = canvas.width / 3.85;
         container.style.marginTop = -canvas.height / 2;
         container.style.marginLeft = -canvas.width / 2;
+        subtitle.style.width = canvas.width;
     
         this.gameModel.prevWidth = this.gameModel.width || 0;
         this.gameModel.prevHeight = this.gameModel.height || 0;

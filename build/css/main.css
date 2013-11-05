@@ -20,5 +20,12 @@ body {
 }
 
 #timer {
+    position:absolute;
+    color:#000;
     display: inline-block;
+}
+
+#subtitles {
+    text-align:center;
+    margin-top:10px;
 }
